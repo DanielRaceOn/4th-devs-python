@@ -10,7 +10,7 @@ JSON schema for grounded paragraph HTML responses from the Responses API.
 
 @Author:        Daniel Szczepanski
 @Created on:    09.03.2026
-@Created based on:  `src/schemas/ground.js`
+@Based on:      `src/schemas/ground.js`
 
 """
 

@@ -12,7 +12,7 @@ and helpers consumed by all lesson modules.
 
 @Author:        Daniel Szczepanski
 @Created on:    09.03.2026
-@Created based on:  `config.js`
+@Based on:      `config.js`
 
 """
 

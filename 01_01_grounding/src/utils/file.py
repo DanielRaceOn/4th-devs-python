@@ -11,7 +11,7 @@ and markdown file resolution from the notes directory.
 
 @Author:        Daniel Szczepanski
 @Created on:    09.03.2026
-@Created based on:  `src/utils/file.js`
+@Based on:      `src/utils/file.js`
 
 """
 

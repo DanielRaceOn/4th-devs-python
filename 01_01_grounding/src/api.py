@@ -12,7 +12,7 @@ consumed by all pipeline stages.
 
 @Author:        Daniel Szczepanski
 @Created on:    09.03.2026
-@Created based on:  `src/api.js`
+@Based on:      `src/api.js`
 
 """
 

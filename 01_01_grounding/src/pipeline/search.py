@@ -11,7 +11,7 @@ caches results to search_results.json, and supports OpenRouter's :online model v
 
 @Author:        Daniel Szczepanski
 @Created on:    09.03.2026
-@Created based on:  `src/pipeline/search.js`
+@Based on:      `src/pipeline/search.js`
 
 """
 

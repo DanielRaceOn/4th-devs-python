@@ -11,7 +11,7 @@ and paragraph-type classification used across the grounding pipeline.
 
 @Author:        Daniel Szczepanski
 @Created on:    09.03.2026
-@Created based on:  `src/utils/text.js`
+@Based on:      `src/utils/text.js`
 
 """
 

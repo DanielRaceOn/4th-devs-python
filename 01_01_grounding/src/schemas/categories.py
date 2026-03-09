@@ -10,7 +10,7 @@ Allowed concept category taxonomy used across schemas and concept filtering.
 
 @Author:        Daniel Szczepanski
 @Created on:    09.03.2026
-@Created based on:  `src/schemas/categories.js`
+@Based on:      `src/schemas/categories.js`
 
 """
 

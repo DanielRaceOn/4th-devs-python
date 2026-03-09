@@ -11,7 +11,7 @@ building typed message dicts.
 
 @Author:        Daniel Szczepanski
 @Created on:    09.03.2026
-@Created based on:  `helpers.js`
+@Based on:      `helpers.js`
 
 """
 

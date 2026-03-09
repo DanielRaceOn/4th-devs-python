@@ -11,7 +11,7 @@ API settings, and CLI argument parsing.
 
 @Author:        Daniel Szczepanski
 @Created on:    09.03.2026
-@Created based on:  `src/config.js`
+@Based on:      `src/config.js`
 
 """
 

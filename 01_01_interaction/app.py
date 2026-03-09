@@ -12,7 +12,7 @@ and prints both answers along with reasoning token counts.
 
 @Author:        Daniel Szczepanski
 @Created on:    09.03.2026
-@Created based on:  `app.js`
+@Based on:      `app.js`
 
 """
 

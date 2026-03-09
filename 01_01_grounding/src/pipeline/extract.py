@@ -11,7 +11,7 @@ concepts, caches results to concepts.json, and supports incremental updates.
 
 @Author:        Daniel Szczepanski
 @Created on:    09.03.2026
-@Created based on:  `src/pipeline/extract.js`
+@Based on:      `src/pipeline/extract.js`
 
 """
 

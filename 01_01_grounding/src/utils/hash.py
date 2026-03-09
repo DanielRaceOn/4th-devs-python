@@ -11,7 +11,7 @@ Mirrors the JS stable-stringify approach for consistent cross-run hashes.
 
 @Author:        Daniel Szczepanski
 @Created on:    09.03.2026
-@Created based on:  `src/utils/hash.js`
+@Based on:      `src/utils/hash.js`
 
 """
 

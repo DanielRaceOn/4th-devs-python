@@ -11,7 +11,7 @@ of extracted concepts per paragraph before caching.
 
 @Author:        Daniel Szczepanski
 @Created on:    09.03.2026
-@Created based on:  `src/pipeline/concept-filter.js`
+@Based on:      `src/pipeline/concept-filter.js`
 
 """
 

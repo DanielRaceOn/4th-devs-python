@@ -11,7 +11,7 @@ concept-annotated spans, then inserts the result into the HTML template.
 
 @Author:        Daniel Szczepanski
 @Created on:    09.03.2026
-@Created based on:  `src/pipeline/ground.js`
+@Based on:      `src/pipeline/ground.js`
 
 """
 

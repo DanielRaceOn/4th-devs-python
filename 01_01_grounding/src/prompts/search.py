@@ -10,7 +10,7 @@ Prompt builder for the web search grounding pipeline stage.
 
 @Author:        Daniel Szczepanski
 @Created on:    09.03.2026
-@Created based on:  `src/prompts/search.js`
+@Based on:      `src/prompts/search.js`
 
 """
 
