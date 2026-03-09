@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Grounded Notes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --color-bg: #0a0a0b;
+      --color-surface: #141416;
+      --color-border: #2a2a2e;
+      --color-text: #e8e8ed;
+      --color-text-muted: #8b8b94;
+      --color-accent: #6366f1;
+      --color-accent-soft: rgba(99, 102, 241, 0.15);
+      --color-accent-glow: rgba(99, 102, 241, 0.25);
+      --color-link: #818cf8;
+      --color-code-bg: #1a1a1f;
+      --color-highlight: rgba(251, 191, 36, 0.2);
+      --color-highlight-border: rgba(251, 191, 36, 0.4);
+      --font-body: 'Lexend', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      font-size: 17px;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-body);
+      font-weight: 300;
+      line-height: 1.75;
+      color: var(--color-text);
+      background: var(--color-bg);
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 4rem 2rem 6rem;
+    }
+
+    /* Headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      line-height: 1.3;
+      margin-top: 3rem;
+      margin-bottom: 1rem;
+      color: var(--color-text);
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 600;
+      line-height: 1.2;
+      letter-spacing: -0.03em;
+      margin-top: 0;
+      margin-bottom: 2rem;
+      background: linear-gradient(135deg, var(--color-text) 0%, var(--color-text-muted) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    h2 {
+      font-size: 1.6rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--color-border);
+      margin-top: 4rem;
+    }
+
+    h3 {
+      font-size: 1.3rem;
+    }
+
+    /* Paragraphs */
+    p {
+      margin: 0 0 1.5rem;
+      color: var(--color-text);
+    }
+
+    /* Links */
+    a {
+      color: var(--color-link);
+      text-decoration: none;
+      transition: opacity 0.2s ease;
+    }
+
+    a:hover {
+      opacity: 0.8;
+      text-decoration: underline;
+    }
+
+    /* Strong/Bold */
+    strong {
+      font-weight: 500;
+      color: var(--color-text);
+    }
+
+    /* Lists */
+    ul, ol {
+      margin: 0 0 1.5rem;
+      padding-left: 1.5rem;
+    }
+
+    li {
+      margin-bottom: 0.75rem;
+      padding-left: 0.25rem;
+    }
+
+    li::marker {
+      color: var(--color-accent);
+    }
+
+    /* Code */
+    code {
+      font-family: var(--font-mono);
+      font-size: 0.85em;
+      background: var(--color-code-bg);
+      padding: 0.2em 0.5em;
+      border-radius: 6px;
+      border: 1px solid var(--color-border);
+      color: var(--color-link);
+    }
+
+    pre {
+      background: var(--color-code-bg);
+      border: 1px solid var(--color-border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      overflow-x: auto;
+      margin: 1.5rem 0;
+    }
+
+    pre code {
+      background: none;
+      border: none;
+      padding: 0;
+      font-size: 0.9rem;
+      color: var(--color-text);
+    }
+
+    /* Blockquotes */
+    blockquote {
+      margin: 2rem 0;
+      padding: 1.25rem 1.5rem;
+      background: var(--color-accent-soft);
+      border-left: 3px solid var(--color-accent);
+      border-radius: 0 12px 12px 0;
+      color: var(--color-text);
+    }
+
+    blockquote p {
+      margin: 0;
+    }
+
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--color-border);
+      margin: 3rem 0;
+    }
+
+    /* Grounded text highlighting */
+    .grounded {
+      --glow-color: rgba(251, 191, 36, 0);
+      position: relative;
+      background: var(--color-highlight);
+      border-bottom: 2px solid var(--color-highlight-border);
+      padding: 0.1em 0.25em;
+      margin: 0 -0.1em;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: 
+        background 0.25s ease,
+        border-color 0.25s ease,
+        box-shadow 0.25s ease;
+    }
+
+    .grounded:hover,
+    .grounded.active {
+      background: rgba(251, 191, 36, 0.3);
+      border-color: rgba(251, 191, 36, 0.7);
+      box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.15);
+    }
+
+    .grounded.active {
+      background: rgba(251, 191, 36, 0.35);
+    }
+
+    /* Source count badge */
+    .grounded[data-source-count]::after {
+      content: attr(data-source-count);
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      min-width: 16px;
+      height: 16px;
+      padding: 0 4px;
+      background: var(--color-accent);
+      color: white;
+      font-size: 0.6rem;
+      font-weight: 600;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transform: scale(0.8);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      pointer-events: none;
+    }
+
+    .grounded:hover[data-source-count]::after,
+    .grounded.active[data-source-count]::after {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    /* Tooltip overlay */
+    .tooltip-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      display: none;
+    }
+
+    .tooltip-overlay.visible {
+      display: block;
+    }
+
+    /* Tooltip */
+    .tooltip {
+      position: fixed;
+      z-index: 1000;
+      width: min(480px, calc(100vw - 2rem));
+      background: var(--color-surface);
+      color: var(--color-text);
+      border: 1px solid var(--color-border);
+      border-radius: 16px;
+      font-size: 0.9rem;
+      font-weight: 300;
+      line-height: 1.6;
+      box-shadow: 
+        0 4px 6px -1px rgba(0, 0, 0, 0.3),
+        0 25px 60px -15px rgba(0, 0, 0, 0.6),
+        0 0 0 1px rgba(255, 255, 255, 0.05),
+        0 0 80px -20px rgba(99, 102, 241, 0.15);
+      opacity: 0;
+      transform: translateY(10px) scale(0.98);
+      pointer-events: none;
+      transition: 
+        opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+        transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+        visibility 0.3s;
+      visibility: hidden;
+      overflow: hidden;
+    }
+
+    .tooltip.visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+      visibility: visible;
+    }
+
+    /* Tooltip arrow */
+    .tooltip-arrow {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-right: none;
+      border-bottom: none;
+      transform: rotate(45deg);
+      z-index: -1;
+    }
+
+    .tooltip.arrow-top .tooltip-arrow {
+      bottom: -7px;
+      transform: rotate(-135deg);
+    }
+
+    .tooltip.arrow-bottom .tooltip-arrow {
+      top: -7px;
+      transform: rotate(45deg);
+    }
+
+    /* Tooltip header */
+    .tooltip-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1rem 1.25rem;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.03), transparent);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .tooltip-term {
+      font-size: 0.75rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-highlight-border);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .tooltip-term-icon {
+      width: 14px;
+      height: 14px;
+      opacity: 0.8;
+    }
+
+    .tooltip-close {
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      border: none;
+      color: var(--color-text-muted);
+      cursor: pointer;
+      border-radius: 6px;
+      transition: background 0.15s ease, color 0.15s ease;
+      margin: -0.25rem -0.5rem -0.25rem 0;
+    }
+
+    .tooltip-close:hover {
+      background: rgba(255,255,255,0.1);
+      color: var(--color-text);
+    }
+
+    .tooltip-close svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    /* Tooltip body */
+    .tooltip-body {
+      padding: 1.25rem;
+    }
+
+    .tooltip-content {
+      color: var(--color-text);
+      margin: 0;
+    }
+
+    /* Tooltip sources */
+    .tooltip-sources {
+      padding: 1rem 1.25rem;
+      background: rgba(0,0,0,0.2);
+      border-top: 1px solid var(--color-border);
+      display: none;
+    }
+
+    .tooltip-sources.has-sources {
+      display: block;
+    }
+
+    .tooltip-sources-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .tooltip-sources-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--color-text-muted);
+      font-weight: 500;
+    }
+
+    .tooltip-sources-count {
+      font-size: 0.65rem;
+      background: var(--color-border);
+      color: var(--color-text-muted);
+      padding: 0.15em 0.5em;
+      border-radius: 4px;
+      font-weight: 500;
+    }
+
+    .tooltip-sources-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .tooltip-link {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      color: var(--color-text);
+      text-decoration: none;
+      font-size: 0.8rem;
+      line-height: 1.4;
+      padding: 0.5rem 0.75rem;
+      margin: 0 -0.75rem;
+      border-radius: 8px;
+      transition: background 0.15s ease;
+      opacity: 0;
+      transform: translateX(-8px);
+      animation: slideIn 0.2s ease forwards;
+    }
+
+    .tooltip.visible .tooltip-link:nth-child(1) { animation-delay: 0.05s; }
+    .tooltip.visible .tooltip-link:nth-child(2) { animation-delay: 0.1s; }
+    .tooltip.visible .tooltip-link:nth-child(3) { animation-delay: 0.15s; }
+    .tooltip.visible .tooltip-link:nth-child(4) { animation-delay: 0.2s; }
+    .tooltip.visible .tooltip-link:nth-child(5) { animation-delay: 0.25s; }
+
+    @keyframes slideIn {
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .tooltip-link:hover {
+      background: rgba(255,255,255,0.08);
+    }
+
+    .tooltip-link-favicon {
+      width: 16px;
+      height: 16px;
+      border-radius: 4px;
+      flex-shrink: 0;
+      background: var(--color-border);
+      object-fit: contain;
+    }
+
+    .tooltip-link-info {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+    }
+
+    .tooltip-link-title {
+      color: var(--color-text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .tooltip-link-domain {
+      font-size: 0.7rem;
+      color: var(--color-text-muted);
+    }
+
+    .tooltip-link-arrow {
+      width: 14px;
+      height: 14px;
+      color: var(--color-text-muted);
+      opacity: 0;
+      transform: translateX(-4px);
+      transition: opacity 0.15s ease, transform 0.15s ease;
+    }
+
+    .tooltip-link:hover .tooltip-link-arrow {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    /* Keyboard hint (desktop only) */
+    .tooltip-hint {
+      padding: 0.6rem 1.25rem;
+      background: rgba(0,0,0,0.15);
+      border-top: 1px solid var(--color-border);
+      font-size: 0.7rem;
+      color: var(--color-text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .tooltip-hint kbd {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 18px;
+      height: 18px;
+      padding: 0 5px;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: 4px;
+      color: var(--color-text-muted);
+    }
+
+    /* Mobile hint (hidden by default, shown via media query) */
+    .tooltip-mobile-hint {
+      display: none;
+    }
+
+    /* Stats indicator */
+    .grounding-stats {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.6rem 1rem;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 100px;
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      opacity: 0.7;
+      transition: opacity 0.2s ease;
+      z-index: 100;
+    }
+
+    .grounding-stats:hover {
+      opacity: 1;
+    }
+
+    .grounding-stats-icon {
+      width: 14px;
+      height: 14px;
+      color: var(--color-highlight-border);
+    }
+
+    .grounding-stats-count {
+      font-weight: 500;
+      color: var(--color-text);
+    }
+
+    /* Body scroll lock */
+    body.tooltip-open {
+      overflow: hidden;
+      position: fixed;
+      width: 100%;
+    }
+
+    /* Mobile drag handle */
+    .tooltip-drag-handle {
+      display: none;
+      justify-content: center;
+      padding: 12px 0 8px;
+      cursor: grab;
+      touch-action: none;
+    }
+
+    .tooltip-drag-handle::before {
+      content: '';
+      width: 36px;
+      height: 4px;
+      background: var(--color-border);
+      border-radius: 2px;
+    }
+
+    .tooltip-drag-handle:active {
+      cursor: grabbing;
+    }
+
+    /* Responsive */
+    @media (max-width: 640px) {
+      html {
+        font-size: 16px;
+      }
+
+      .container {
+        padding: 2rem 1.25rem 5rem;
+      }
+
+      h1 {
+        font-size: 1.8rem;
+      }
+
+      h2 {
+        font-size: 1.4rem;
+      }
+
+      /* Larger tap targets for grounded text */
+      .grounded {
+        padding: 0.15em 0.3em;
+        margin: 0 -0.15em;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .grounded[data-source-count]::after {
+        display: none;
+      }
+
+      /* Mobile overlay with backdrop blur */
+      .tooltip-overlay {
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+      }
+
+      /* Bottom sheet tooltip */
+      .tooltip {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        top: auto !important;
+        width: 100%;
+        max-width: 100%;
+        max-height: 85vh;
+        max-height: 85dvh;
+        border-radius: 20px 20px 0 0;
+        transform: translateY(100%);
+        transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+        overflow: hidden;
+        padding-bottom: env(safe-area-inset-bottom, 0);
+      }
+
+      .tooltip.visible {
+        transform: translateY(0);
+      }
+
+      .tooltip.dragging {
+        transition: none;
+      }
+
+      .tooltip-drag-handle {
+        display: flex;
+      }
+
+      .tooltip-arrow {
+        display: none;
+      }
+
+      .tooltip-header {
+        padding: 0.75rem 1.25rem 1rem;
+      }
+
+      .tooltip-close {
+        width: 32px;
+        height: 32px;
+      }
+
+      .tooltip-close svg {
+        width: 18px;
+        height: 18px;
+      }
+
+      .tooltip-body {
+        padding: 1rem 1.25rem 1.25rem;
+        max-height: 30vh;
+        max-height: 30dvh;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .tooltip-sources {
+        padding: 1rem 1.25rem;
+        max-height: 35vh;
+        max-height: 35dvh;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .tooltip-link {
+        padding: 0.75rem;
+        margin: 0 -0.75rem;
+        min-height: 56px;
+      }
+
+      .tooltip-link-favicon {
+        width: 20px;
+        height: 20px;
+      }
+
+      .tooltip-link-info {
+        gap: 0.2rem;
+      }
+
+      .tooltip-link-title {
+        font-size: 0.9rem;
+        white-space: normal;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      .tooltip-link-domain {
+        font-size: 0.75rem;
+      }
+
+      .tooltip-link-arrow {
+        opacity: 0.5;
+        transform: none;
+        width: 18px;
+        height: 18px;
+      }
+
+      .tooltip-hint {
+        display: none;
+      }
+
+      /* Mobile hint at bottom */
+      .tooltip-mobile-hint {
+        display: flex;
+        justify-content: center;
+        padding: 0.75rem 1.25rem;
+        padding-bottom: calc(0.75rem + env(safe-area-inset-bottom, 0));
+        font-size: 0.7rem;
+        color: var(--color-text-muted);
+        background: rgba(0,0,0,0.15);
+        border-top: 1px solid var(--color-border);
+      }
+
+      .grounding-stats {
+        bottom: calc(0.75rem + env(safe-area-inset-bottom, 0));
+        right: 0.75rem;
+        padding: 0.5rem 0.75rem;
+        font-size: 0.7rem;
+      }
+    }
+
+    /* Extra small screens */
+    @media (max-width: 380px) {
+      .container {
+        padding: 1.5rem 1rem 4rem;
+      }
+
+      h1 {
+        font-size: 1.5rem;
+      }
+
+      .tooltip-term-text {
+        max-width: 180px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+
+    /* Print styles */
+    @media print {
+      body {
+        background: white;
+        color: black;
+      }
+
+      .container {
+        max-width: none;
+        padding: 0;
+      }
+
+      .grounded {
+        background: #fffbeb;
+        border-color: #fbbf24;
+      }
+
+      .tooltip {
+        display: none;
+      }
+
+      h2, h3 {
+        page-break-after: avoid;
+      }
+    }
+
+    /* Selection */
+    ::selection {
+      background: var(--color-accent);
+      color: white;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--color-bg);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--color-border);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--color-text-muted);
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <!--CONTENT-->
+</div>
+
+<div class="grounding-stats" id="grounding-stats" title="Grounded concepts in this document">
+  <svg class="grounding-stats-icon" viewBox="0 0 20 20" fill="currentColor">
+    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z" clip-rule="evenodd" />
+  </svg>
+  <span class="grounding-stats-count" id="grounding-count">0</span>
+  <span>grounded</span>
+</div>
+
+<div class="tooltip-overlay" id="tooltip-overlay"></div>
+<div class="tooltip" id="tooltip">
+  <div class="tooltip-drag-handle" id="tooltip-drag-handle"></div>
+  <div class="tooltip-arrow" id="tooltip-arrow"></div>
+  <div class="tooltip-header">
+    <div class="tooltip-term" id="tooltip-term">
+      <svg class="tooltip-term-icon" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z" clip-rule="evenodd" />
+      </svg>
+      <span id="tooltip-term-text"></span>
+    </div>
+    <button class="tooltip-close" id="tooltip-close" aria-label="Close tooltip">
+      <svg viewBox="0 0 20 20" fill="currentColor">
+        <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
+      </svg>
+    </button>
+  </div>
+  <div class="tooltip-body">
+    <p class="tooltip-content" id="tooltip-content"></p>
+  </div>
+  <div class="tooltip-sources" id="tooltip-sources">
+    <div class="tooltip-sources-header">
+      <span class="tooltip-sources-label">Sources</span>
+      <span class="tooltip-sources-count" id="tooltip-sources-count"></span>
+    </div>
+    <div class="tooltip-sources-list" id="tooltip-sources-list"></div>
+  </div>
+  <div class="tooltip-hint">
+    Press <kbd>Esc</kbd> to close
+  </div>
+  <div class="tooltip-mobile-hint">
+    Swipe down or tap outside to close
+  </div>
+</div>
+
+<script>
+  const tooltip = document.getElementById('tooltip');
+  const tooltipOverlay = document.getElementById('tooltip-overlay');
+  const tooltipArrow = document.getElementById('tooltip-arrow');
+  const tooltipDragHandle = document.getElementById('tooltip-drag-handle');
+  const tooltipTermText = document.getElementById('tooltip-term-text');
+  const tooltipContent = document.getElementById('tooltip-content');
+  const tooltipSources = document.getElementById('tooltip-sources');
+  const tooltipSourcesCount = document.getElementById('tooltip-sources-count');
+  const tooltipSourcesList = document.getElementById('tooltip-sources-list');
+  const tooltipClose = document.getElementById('tooltip-close');
+  
+  let currentTarget = null;
+  let isPinned = false;
+  let scrollY = 0;
+  let hideTimeout = null;
+  let showTimeout = null;
+
+  // Timing constants
+  const SHOW_DELAY = 150;   // Delay before showing tooltip on hover
+  const HIDE_DELAY = 300;   // Delay before hiding tooltip (allows moving to tooltip)
+
+  // Detect touch device
+  const isTouchDevice = () => 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+  const isMobile = () => window.innerWidth <= 640;
+
+  function clearTimers() {
+    clearTimeout(hideTimeout);
+    clearTimeout(showTimeout);
+    hideTimeout = null;
+    showTimeout = null;
+  }
+
+  const arrowIcon = `<svg class="tooltip-link-arrow" viewBox="0 0 20 20" fill="currentColor">
+    <path fill-rule="evenodd" d="M5.22 14.78a.75.75 0 001.06 0l7.22-7.22v5.69a.75.75 0 001.5 0v-7.5a.75.75 0 00-.75-.75h-7.5a.75.75 0 000 1.5h5.69l-7.22 7.22a.75.75 0 000 1.06z" clip-rule="evenodd" />
+  </svg>`;
+
+  // Body scroll lock for mobile
+  function lockBodyScroll() {
+    if (isMobile()) {
+      scrollY = window.scrollY;
+      document.body.style.top = `-${scrollY}px`;
+      document.body.classList.add('tooltip-open');
+    }
+  }
+
+  function unlockBodyScroll() {
+    document.body.classList.remove('tooltip-open');
+    document.body.style.top = '';
+    if (isMobile() && scrollY) {
+      window.scrollTo(0, scrollY);
+    }
+  }
+
+  function parseGrounding(text) {
+    if (!text) return { content: "", sources: [] };
+
+    try {
+      const parsed = JSON.parse(text);
+      const summary = typeof parsed.summary === "string" ? parsed.summary : "";
+      const rawSources = Array.isArray(parsed.sources) ? parsed.sources : [];
+      const sources = rawSources
+        .filter((source) => source && typeof source.url === "string")
+        .map((source) => {
+          const cleanUrl = source.url.replace(/[.,;:!?)]+$/, "");
+          let domain = cleanUrl;
+          try {
+            domain = new URL(cleanUrl).hostname.replace("www.", "");
+          } catch {
+            domain = cleanUrl;
+          }
+          return {
+            url: cleanUrl,
+            title: typeof source.title === "string" ? source.title : null,
+            domain
+          };
+        });
+      return { content: summary, sources };
+    } catch {
+      // Fallback for legacy format
+      const sourcesMatch = text.match(/Sources:\s*(.+)$/);
+      let content = text;
+      let sources = [];
+      if (sourcesMatch) {
+        content = text.replace(/\s*Sources:\s*.+$/, '').trim();
+        const urls = sourcesMatch[1].match(/https?:\/\/[^\s]+/g) || [];
+        sources = urls.map(url => {
+          const cleanUrl = url.replace(/[.,;:!?)]+$/, '');
+          try {
+            const domain = new URL(cleanUrl).hostname.replace('www.', '');
+            return { url: cleanUrl, title: null, domain };
+          } catch {
+            return { url: cleanUrl, title: null, domain: cleanUrl };
+          }
+        });
+      }
+      return { content, sources };
+    }
+  }
+
+  function getFaviconUrl(domain) {
+    return `https://www.google.com/s2/favicons?domain=${domain}&sz=32`;
+  }
+
+  function showTooltip(target, pinned = false) {
+    // Clear any pending timers
+    clearTimers();
+    
+    // Clear previous state
+    if (currentTarget && currentTarget !== target) {
+      currentTarget.classList.remove('active');
+    }
+    
+    currentTarget = target;
+    isPinned = pinned;
+    
+    target.classList.add('active');
+
+    const grounding = target.getAttribute('data-grounding');
+    const termText = target.textContent.trim();
+    const { content, sources } = parseGrounding(grounding);
+
+    // Set content
+    tooltipTermText.textContent = termText.length > 50 
+      ? termText.slice(0, 50) + '...' 
+      : termText;
+    tooltipContent.textContent = content;
+
+    // Set sources
+    if (sources.length > 0) {
+      tooltipSourcesCount.textContent = sources.length;
+      tooltipSourcesList.innerHTML = sources.map(s => `
+        <a href="${s.url}" target="_blank" rel="noopener noreferrer" class="tooltip-link">
+          <img 
+            src="${getFaviconUrl(s.domain)}" 
+            alt="" 
+            class="tooltip-link-favicon"
+            onerror="this.style.display='none'"
+          >
+          <div class="tooltip-link-info">
+            <span class="tooltip-link-title">${s.title || s.domain}</span>
+            <span class="tooltip-link-domain">${s.domain}</span>
+          </div>
+          ${arrowIcon}
+        </a>
+      `).join('');
+      tooltipSources.classList.add('has-sources');
+    } else {
+      tooltipSources.classList.remove('has-sources');
+    }
+
+    // Position tooltip (desktop only)
+    if (!isMobile()) {
+      positionTooltip(target);
+    }
+    
+    // Show overlay if pinned
+    if (pinned) {
+      tooltipOverlay.classList.add('visible');
+      lockBodyScroll();
+    }
+    
+    tooltip.classList.add('visible');
+  }
+
+  function positionTooltip(target) {
+    // Skip positioning on mobile (uses CSS bottom sheet)
+    if (isMobile()) return;
+
+    const rect = target.getBoundingClientRect();
+    const tooltipRect = tooltip.getBoundingClientRect();
+    const padding = 16;
+    const arrowSize = 12;
+    
+    // Calculate ideal position (prefer above)
+    let top = rect.top - tooltipRect.height - arrowSize - 4;
+    let arrowPosition = 'bottom';
+    
+    // If not enough space above, show below
+    if (top < padding) {
+      top = rect.bottom + arrowSize + 4;
+      arrowPosition = 'top';
+    }
+    
+    // Horizontal centering with boundaries
+    let left = rect.left + (rect.width / 2) - (tooltipRect.width / 2);
+    if (left < padding) left = padding;
+    if (left + tooltipRect.width > window.innerWidth - padding) {
+      left = window.innerWidth - tooltipRect.width - padding;
+    }
+    
+    // Arrow position
+    const arrowLeft = Math.min(
+      Math.max(rect.left + rect.width / 2 - left - arrowSize / 2, 20),
+      tooltipRect.width - 40
+    );
+    
+    tooltip.style.left = `${left}px`;
+    tooltip.style.top = `${top}px`;
+    
+    tooltipArrow.style.left = `${arrowLeft}px`;
+    
+    tooltip.classList.remove('arrow-top', 'arrow-bottom');
+    tooltip.classList.add(`arrow-${arrowPosition}`);
+  }
+
+  function hideTooltip(immediate = false) {
+    if (isPinned) return;
+    
+    clearTimeout(showTimeout);
+    showTimeout = null;
+    
+    if (immediate) {
+      doHide();
+    } else {
+      // Delayed hide to allow moving mouse to tooltip
+      hideTimeout = setTimeout(doHide, HIDE_DELAY);
+    }
+  }
+
+  function doHide() {
+    tooltip.classList.remove('visible');
+    tooltipOverlay.classList.remove('visible');
+    unlockBodyScroll();
+    
+    if (currentTarget) {
+      currentTarget.classList.remove('active');
+      currentTarget = null;
+    }
+  }
+
+  function cancelHide() {
+    clearTimeout(hideTimeout);
+    hideTimeout = null;
+  }
+
+  function forceHideTooltip() {
+    clearTimers();
+    isPinned = false;
+    tooltip.classList.remove('visible');
+    tooltipOverlay.classList.remove('visible');
+    tooltip.style.transform = '';
+    unlockBodyScroll();
+    
+    if (currentTarget) {
+      currentTarget.classList.remove('active');
+      currentTarget = null;
+    }
+  }
+
+  // Initialize grounded elements
+  const groundedElements = document.querySelectorAll('.grounded');
+  
+  // Set source count badges
+  groundedElements.forEach(el => {
+    const grounding = el.getAttribute('data-grounding');
+    const { sources } = parseGrounding(grounding);
+    if (sources.length > 0) {
+      el.setAttribute('data-source-count', sources.length);
+    }
+  });
+  
+  // Update stats indicator
+  document.getElementById('grounding-count').textContent = groundedElements.length;
+
+  // Click to pin tooltip
+  document.addEventListener('click', (e) => {
+    const grounded = e.target.closest('.grounded');
+    if (grounded) {
+      e.preventDefault();
+      clearTimers();
+      if (currentTarget === grounded && isPinned) {
+        forceHideTooltip();
+      } else {
+        showTooltip(grounded, true);
+      }
+    }
+  });
+
+  // Hover behavior (only on desktop, not pinned)
+  document.addEventListener('mouseenter', (e) => {
+    if (isPinned || isTouchDevice()) return;
+    if (e.target.classList?.contains('grounded')) {
+      cancelHide();
+      // Small delay before showing to avoid flickering
+      clearTimeout(showTimeout);
+      const target = e.target;
+      showTimeout = setTimeout(() => {
+        showTooltip(target, false);
+      }, SHOW_DELAY);
+    }
+  }, true);
+
+  document.addEventListener('mouseleave', (e) => {
+    if (isPinned || isTouchDevice()) return;
+    if (e.target.classList?.contains('grounded')) {
+      clearTimeout(showTimeout);
+      showTimeout = null;
+      hideTooltip(); // Uses HIDE_DELAY
+    }
+  }, true);
+
+  // Keep tooltip visible when hovering over it (desktop only)
+  tooltip.addEventListener('mouseenter', () => {
+    if (isTouchDevice()) return;
+    cancelHide(); // Cancel any pending hide
+    if (!isPinned) {
+      isPinned = true;
+      tooltipOverlay.classList.add('visible');
+    }
+  });
+
+  // Start hide timer when leaving tooltip
+  tooltip.addEventListener('mouseleave', () => {
+    if (isTouchDevice()) return;
+    if (isPinned) {
+      isPinned = false;
+      tooltipOverlay.classList.remove('visible');
+      hideTooltip();
+    }
+  });
+
+  // Close button
+  tooltipClose.addEventListener('click', (e) => {
+    e.stopPropagation();
+    forceHideTooltip();
+  });
+
+  // Click overlay to close
+  tooltipOverlay.addEventListener('click', forceHideTooltip);
+
+  // Keyboard support
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && tooltip.classList.contains('visible')) {
+      forceHideTooltip();
+    }
+  });
+
+  // Touch drag to dismiss (mobile)
+  let dragStartY = 0;
+  let dragCurrentY = 0;
+  let isDragging = false;
+
+  function handleDragStart(e) {
+    if (!isMobile()) return;
+    isDragging = true;
+    dragStartY = e.touches ? e.touches[0].clientY : e.clientY;
+    dragCurrentY = dragStartY;
+    tooltip.classList.add('dragging');
+  }
+
+  function handleDragMove(e) {
+    if (!isDragging) return;
+    dragCurrentY = e.touches ? e.touches[0].clientY : e.clientY;
+    const deltaY = Math.max(0, dragCurrentY - dragStartY);
+    tooltip.style.transform = `translateY(${deltaY}px)`;
+  }
+
+  function handleDragEnd() {
+    if (!isDragging) return;
+    isDragging = false;
+    tooltip.classList.remove('dragging');
+    
+    const deltaY = dragCurrentY - dragStartY;
+    const threshold = 80;
+    
+    if (deltaY > threshold) {
+      forceHideTooltip();
+    } else {
+      tooltip.style.transform = '';
+    }
+  }
+
+  // Drag handle touch events
+  tooltipDragHandle.addEventListener('touchstart', handleDragStart, { passive: true });
+  document.addEventListener('touchmove', handleDragMove, { passive: false });
+  document.addEventListener('touchend', handleDragEnd);
+
+  // Also allow dragging from header area on mobile
+  tooltip.querySelector('.tooltip-header').addEventListener('touchstart', (e) => {
+    if (e.target.closest('.tooltip-close')) return;
+    handleDragStart(e);
+  }, { passive: true });
+
+  // Reposition on scroll/resize while visible (desktop only)
+  let repositionRaf = null;
+  const handleReposition = () => {
+    if (repositionRaf || isMobile()) return;
+    repositionRaf = requestAnimationFrame(() => {
+      if (currentTarget && tooltip.classList.contains('visible')) {
+        positionTooltip(currentTarget);
+      }
+      repositionRaf = null;
+    });
+  };
+
+  window.addEventListener('scroll', handleReposition, { passive: true });
+  window.addEventListener('resize', () => {
+    handleReposition();
+    // Close tooltip on orientation change to reset state
+    if (tooltip.classList.contains('visible') && isMobile()) {
+      forceHideTooltip();
+    }
+  });
+</script>
+</body>
+</html>
