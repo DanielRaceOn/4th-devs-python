@@ -64,3 +64,21 @@ python -m 01_01_grounding.app --batch=5
 # Disable batching entirely
 python -m 01_01_grounding.app --no-batch
 ```
+
+## Lesson 02
+
+| Example | Run | Description |
+|---------|-----|-------------|
+| `01_02_tools` | `python -m 01_02_tools.app` | Minimal tool-use: weather lookup + send email with web search |
+| `01_02_tool_use` | `python -m 01_02_tool_use.app` | Sandboxed filesystem assistant (list, read, write, delete files) |
+
+Run examples from the project root:
+
+```bash
+python -m 01_02_tools.app
+python -m 01_02_tool_use.app
+```
+
+`01_02_tools` — The model uses web search to look up the current weather in Kraków, then calls a mocked `send_email` tool to deliver the result to a recipient.
+
+`01_02_tool_use` — A sandboxed filesystem assistant that can list, read, write, and delete files.  All file operations are confined to the `01_02_tool_use/sandbox/` directory; path traversal attempts are blocked.  A sequence of predefined queries exercises every available tool including a security-test query.
