@@ -86,3 +86,41 @@ python -m 01_02_tool_use.app
 `01_02_tools` — The model uses web search to look up the current weather in Kraków, then calls a mocked `send_email` tool to deliver the result to a recipient.
 
 `01_02_tool_use` — A sandboxed filesystem assistant that can list, read, write, and delete files.  All file operations are confined to the `01_02_tool_use/sandbox/` directory; path traversal attempts are blocked.  A sequence of predefined queries exercises every available tool including a security-test query.
+
+## Lesson 03 — MCP (Model Context Protocol)
+
+All Lesson 03 examples use the Python `mcp` SDK. Install it first:
+
+```bash
+pip install mcp
+```
+
+| Example | Run | Description |
+|---------|-----|-------------|
+| `01_03_mcp_core` | `python 01_03_mcp_core/app.py` | Full MCP demo over stdio: tools, resources, prompts, sampling |
+| `01_03_mcp_native` | `python 01_03_mcp_native/app.py` | Unified agent with in-memory MCP tools and native Python tools |
+| `01_03_mcp_translator` | `python 01_03_mcp_translator/app.py` | Polish→English file-watching translation agent with HTTP API |
+| `01_03_upload_mcp` | `python 01_03_upload_mcp/app.py` | Multi-server upload agent (files-mcp stdio + uploadthing HTTP) |
+
+Run examples from the project root:
+
+```bash
+python 01_03_mcp_core/app.py
+python 01_03_mcp_native/app.py
+python 01_03_mcp_translator/app.py
+python 01_03_upload_mcp/app.py
+```
+
+`01_03_mcp_core` — Spawns a local MCP server as a subprocess over stdio. Exercises all MCP primitives: `calculate` and `summarize_with_confirmation` tools (the latter demonstrates server-initiated sampling), `config://project` and `data://stats` resources, and a `code-review` prompt template.
+
+`01_03_mcp_native` — Starts an in-memory MCP server with `get_weather` and `get_time` tools, then adds native Python tools (`calculate`, `uppercase`) in the same agent loop. The model sees all tools as one unified toolset.
+
+`01_03_mcp_translator` — Connects to the `files-mcp` server defined in `mcp.json` via stdio. Watches `workspace/translate/` for files and translates them to English using an agentic loop. Also exposes `POST /api/chat` and `POST /api/translate` HTTP endpoints.
+
+```bash
+curl -X POST "http://localhost:3000/api/translate" \
+  -H "Content-Type: application/json" \
+  -d '{"text":"To jest przykladowy tekst po polsku."}'
+```
+
+`01_03_upload_mcp` — Connects to two MCP servers simultaneously: `files` (stdio, local filesystem) and `uploadthing` (HTTP, remote). The agent lists workspace files, uploads untracked ones using `{{file:path}}` placeholders, and records results in `uploaded.md`. Edit `01_03_upload_mcp/mcp.json` and replace the uploadthing URL placeholder before running.

@@ -1,0 +1,17 @@
+{
+  "mcpServers": {
+    "files": {
+      "transport": "stdio",
+      "command": "npx",
+      "args": ["tsx", "../mcp/files-mcp/src/index.ts"],
+      "env": {
+        "LOG_LEVEL": "info",
+        "FS_ROOT": "./workspace"
+      }
+    },
+    "uploadthing": {
+      "transport": "http",
+      "url": "https://uploadthing-mcp.adam-996.workers.dev/mcp"
+    }
+  }
+}
