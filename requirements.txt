@@ -5,4 +5,8 @@ mcp>=1.8.0
 =======
 python-frontmatter>=1.1.0
 playwright>=1.40.0
+<<<<<<< HEAD
 >>>>>>> 1cfd078 (Convert JS module 01_04_reports to Python)
+=======
+replicate>=1.0.0
+>>>>>>> b4eb695 (Convert JS module 01_04_video_generation to Python)

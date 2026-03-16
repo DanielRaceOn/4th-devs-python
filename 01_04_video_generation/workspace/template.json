@@ -1,0 +1,132 @@
+{
+  "subject": {
+    "main": "",
+    "details": "",
+    "orientation": "three-quarter view, facing slightly left",
+    "position": "centered horizontally and vertically",
+    "scale": "occupies 60% of frame height"
+  },
+  "style": {
+    "medium": "Hand-drawn pencil sketch with selective watercolor coloring",
+    "line_work": {
+      "type": "Pencil strokes",
+      "weight": "Medium, consistent throughout",
+      "quality": "Loose but controlled, visible hatching for shading",
+      "outline": "Defined but not harsh, slightly sketchy edges"
+    },
+    "coloring": {
+      "technique": "Watercolor wash, selective application",
+      "coverage": "40-60% of subject area, rest is pencil only",
+      "saturation": "Low to medium, desaturated tones",
+      "blending": "Soft edges where color meets white"
+    }
+  },
+  "color_palette": {
+    "limit": "Maximum 4 colors per image",
+    "primary": "#4A6B8A",
+    "primary_name": "Muted steel blue",
+    "secondary": "#8B6F5C",
+    "secondary_name": "Warm brown",
+    "accent": "#C17F59",
+    "accent_name": "Burnt sienna",
+    "neutral": "#7A7A7A",
+    "neutral_name": "Medium gray",
+    "rules": [
+      "Use primary for main subject areas",
+      "Use secondary for shadows and depth",
+      "Use accent sparingly for focal points only",
+      "Gray for subtle transitions",
+      "Never use pure black for coloring, only for line work",
+      "Never use bright saturated colors"
+    ]
+  },
+  "composition": {
+    "format": "16:9 horizontal landscape",
+    "subject_placement": {
+      "horizontal": "Dead center",
+      "vertical": "Centered, slightly above middle"
+    },
+    "padding": {
+      "top": "15-20%",
+      "bottom": "15-20%",
+      "left": "20%",
+      "right": "20%"
+    },
+    "ground_line": "Subtle, implied at 80% from top",
+    "depth": "Flat, no perspective, no background elements"
+  },
+  "background": {
+    "color": "Pure white #FFFFFF",
+    "texture": "None",
+    "elements": "None",
+    "gradient": "None",
+    "vignette": "None"
+  },
+  "lighting": {
+    "direction": "Upper left, 45 degrees",
+    "type": "Soft, diffused",
+    "shadows": "Indicated through hatching, not solid",
+    "highlights": "White paper showing through"
+  },
+  "edges": {
+    "subject_boundary": "Loose, sketchy, some lines extend slightly",
+    "fade_out": "Gentle fade at extremities, unfinished feel",
+    "containment": "All marks stay within 90% of frame"
+  },
+  "technical": {
+    "resolution": "2k",
+    "aspect_ratio": "16:9",
+    "detail_level": "Medium - clear concept, not overworked"
+  },
+  "constraints": {
+    "must_have": [
+      "Three-quarter view orientation",
+      "Centered subject",
+      "60% frame height occupation",
+      "Maximum 4 colors from defined palette",
+      "Visible pencil strokes",
+      "Pure white background",
+      "Upper-left lighting",
+      "Loose sketch edges",
+      "16:9 horizontal format"
+    ],
+    "must_not_have": [
+      "Text or letters",
+      "Bright saturated colors",
+      "More than 4 colors",
+      "Complex background",
+      "Perfect symmetry",
+      "Hard edges",
+      "Full color coverage",
+      "Vertical or square format",
+      "Centered dead-on front view",
+      "Pure black coloring areas"
+    ]
+  },
+  "negative_prompt": [
+    "text",
+    "words",
+    "letters",
+    "signature",
+    "watermark",
+    "bright colors",
+    "saturated",
+    "neon",
+    "vibrant",
+    "colorful",
+    "rainbow",
+    "background scenery",
+    "detailed background",
+    "photorealistic",
+    "3d render",
+    "digital art",
+    "vector",
+    "symmetrical",
+    "front facing",
+    "square",
+    "vertical",
+    "portrait orientation",
+    "frame",
+    "border"
+  ]
+}

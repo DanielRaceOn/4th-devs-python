@@ -145,6 +145,11 @@ GEMINI_API_KEY=your_gemini_api_key_here
 | `01_04_image_guidance` | `python "01_04_image_guidance/app.py"` | Pose-guided cell-shaded character generation — copies JSON templates, selects pose references, generates and analyzes characters via Gemini/OpenRouter |
 | `01_04_json_image` | `python "01_04_json_image/app.py"` | Token-efficient JSON-based image generation — copies style templates, edits only the subject section, generates images via Gemini/OpenRouter |
 | `01_04_reports` | `python "01_04_reports/app.py"` | Autonomous PDF report generation — reads HTML template and style guide, generates images for visual consistency, converts final HTML to PDF via Playwright |
+<<<<<<< HEAD
+=======
+| `01_04_video` | `python "01_04_video/app.py"` | Interactive video analysis agent — analyze, transcribe, extract scenes/objects/text from local video files or YouTube URLs via Gemini |
+| `01_04_video_generation` | `python "01_04_video_generation/app.py"` | Frame-based video generation agent — generate start/end frames with Gemini, animate transitions with Kling AI via Replicate |
+>>>>>>> b4eb695 (Convert JS module 01_04_video_generation to Python)
 
 Run from the project root:
 
@@ -154,6 +159,11 @@ python "01_04_image_recognition/app.py"
 python "01_04_image_editing/app.py"
 python "01_04_json_image/app.py"
 python "01_04_reports/app.py"
+<<<<<<< HEAD
+=======
+python "01_04_video/app.py"
+python "01_04_video_generation/app.py"
+>>>>>>> b4eb695 (Convert JS module 01_04_video_generation to Python)
 ```
 
 `01_04_audio` — An interactive REPL agent powered by Google Gemini. Supports transcription (with timestamps, speaker detection, emotion detection, and translation), audio analysis (general, music, speech, sounds), custom audio queries, and text-to-speech generation with 30+ voices. Accepts local audio files (MP3, WAV, AIFF, AAC, OGG, FLAC, M4A, WebM) and YouTube URLs. Files larger than 20 MB use Gemini's resumable upload API. Also connects to a `files-mcp` stdio server for filesystem access.
@@ -171,6 +181,17 @@ python "01_04_reports/app.py"
 .venv/Scripts/python -m playwright install chromium
 ```
 
+<<<<<<< HEAD
+=======
+`01_04_video_generation` — A frame-based video generation agent using JSON prompt templates. The model follows a structured workflow: copy `workspace/template.json` to `workspace/prompts/`, edit only the `subject` section, generate a start frame with `create_image`, generate an end frame using the start frame as reference (for character consistency), then call `image_to_video` with both frames to animate the transition using Kling AI (`kwaivgi/kling-v2.5-turbo-pro` via Replicate). Also supports direct text-to-video generation and video quality analysis via Gemini. Requires `REPLICATE_API_TOKEN` and at least one image backend key. Install the `replicate` package first:
+
+```bash
+.venv/Scripts/python -m pip install replicate
+```
+
+`01_04_video` — An interactive REPL agent for video analysis powered by Google Gemini (`gemini-2.5-flash`). Supports video analysis (general, visual, audio, action), speech transcription with timestamps and speaker detection, scene/keyframe/object/text extraction, and custom natural-language queries. Accepts local video files in `workspace/input/` (MP4, MOV, AVI, WebM, and more) and YouTube URLs. Files larger than 20 MB use Gemini's resumable upload API. Also connects to a `files-mcp` stdio server for filesystem access.
+
+>>>>>>> b4eb695 (Convert JS module 01_04_video_generation to Python)
 `01_04_json_image` — A token-efficient JSON-based image generation agent. The model follows a structured workflow: copy `workspace/template.json` (or `workspace/character-template.json`) to `workspace/prompts/`, edit only the `subject` section, read back the full JSON, then call `create_image` with the complete template as the prompt. This approach minimises token usage while preserving rich style/composition constraints encoded in the templates. Supports both OpenRouter (preferred) and native Gemini backends. Output images are saved to `workspace/output/`.
 
 ## Lesson 05 — Human-in-the-loop Agents
