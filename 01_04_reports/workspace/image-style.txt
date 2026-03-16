@@ -1,0 +1,8 @@
+Style definition (use verbatim in every image prompt):
+- Medium: minimalist instructional sketch (clean line drawing)
+- Rendering: thin-to-medium charcoal/ink lines, no shading, no textures
+- Palette: black ink lines on pure white background (#ffffff)
+- Detail level: simplified human figure with clear limb angles and stance width
+- Diagram conventions: subtle ground line; no text in the image
+- Framing: full-body, centered, with some margin; consistent scale across poses
+

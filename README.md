@@ -144,6 +144,7 @@ GEMINI_API_KEY=your_gemini_api_key_here
 | `01_04_image_editing` | `python "01_04_image_editing/app.py"` | Interactive image editing agent — generate or edit images via Gemini/OpenRouter, auto-analyze quality, maintain multi-turn conversation history |
 | `01_04_image_guidance` | `python "01_04_image_guidance/app.py"` | Pose-guided cell-shaded character generation — copies JSON templates, selects pose references, generates and analyzes characters via Gemini/OpenRouter |
 | `01_04_json_image` | `python "01_04_json_image/app.py"` | Token-efficient JSON-based image generation — copies style templates, edits only the subject section, generates images via Gemini/OpenRouter |
+| `01_04_reports` | `python "01_04_reports/app.py"` | Autonomous PDF report generation — reads HTML template and style guide, generates images for visual consistency, converts final HTML to PDF via Playwright |
 
 Run from the project root:
 
@@ -152,6 +153,7 @@ python "01_04_audio/app.py"
 python "01_04_image_recognition/app.py"
 python "01_04_image_editing/app.py"
 python "01_04_json_image/app.py"
+python "01_04_reports/app.py"
 ```
 
 `01_04_audio` — An interactive REPL agent powered by Google Gemini. Supports transcription (with timestamps, speaker detection, emotion detection, and translation), audio analysis (general, music, speech, sounds), custom audio queries, and text-to-speech generation with 30+ voices. Accepts local audio files (MP3, WAV, AIFF, AAC, OGG, FLAC, M4A, WebM) and YouTube URLs. Files larger than 20 MB use Gemini's resumable upload API. Also connects to a `files-mcp` stdio server for filesystem access.
@@ -161,6 +163,13 @@ python "01_04_json_image/app.py"
 `01_04_image_guidance` — A pose-guided cell-shaded character generation agent. The model follows a structured workflow: list available pose references in `workspace/reference/`, copy `workspace/template.json` to `workspace/prompts/`, edit only the subject section, then call `create_image` with the JSON prompt and pose reference. Supports both OpenRouter (preferred) and native Gemini backends. Includes `analyze_image` for quality review with ACCEPT/RETRY verdicts. Place pose reference images (e.g. `walking-pose.png`, `running-pose.png`) in `workspace/reference/` before running.
 
 `01_04_image_editing` — An interactive REPL image editing agent. Uses two native tools: `create_image` (generate from scratch or edit with reference images) and `analyze_image` (quality analysis with ACCEPT/RETRY verdict). Supports both native Gemini and OpenRouter backends for image generation. Maintains full conversation history across REPL turns. Place source images in `workspace/input/`, results are saved to `workspace/output/`. Edit `workspace/style-guide.md` to define visual style constraints.
+
+`01_04_reports` — An autonomous PDF report generation agent. The model reads `workspace/template.html` and `workspace/style-guide.md` first to understand the design system, then generates HTML documents in `workspace/html/`, optionally creates images with `create_image` (saving to `workspace/output/`), and converts the final HTML to a print-ready PDF via the `html_to_pdf` tool (powered by [Playwright](https://playwright.dev/python/)). Enforces image-style consistency across a document by writing a shared style definition to `workspace/image-style.txt` before generating the first image. Requires Playwright with Chromium installed:
+
+```bash
+.venv/Scripts/python -m pip install playwright
+.venv/Scripts/python -m playwright install chromium
+```
 
 `01_04_json_image` — A token-efficient JSON-based image generation agent. The model follows a structured workflow: copy `workspace/template.json` (or `workspace/character-template.json`) to `workspace/prompts/`, edit only the `subject` section, read back the full JSON, then call `create_image` with the complete template as the prompt. This approach minimises token usage while preserving rich style/composition constraints encoded in the templates. Supports both OpenRouter (preferred) and native Gemini backends. Output images are saved to `workspace/output/`.
 
