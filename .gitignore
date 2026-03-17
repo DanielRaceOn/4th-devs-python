@@ -1,8 +1,26 @@
+# Virtual environment and local configuration files
 .venv/
 *.env
 *.local.json
+
+# Bytecode and cache files
 */__pycache__/*
 *.pyc
+
+# Claude specific 
 .claude/*
 
+# VS Code settings
+.vscode/
+
+# Copilot
+.copilot/
+
+# Local logs and outputs from development runs
 **/translated/*
+**/logs/
+# SQLite data directories and test databases
+.data/
+*.db
+*.db-shm
+*.db-wal
