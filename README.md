@@ -124,8 +124,6 @@ curl -X POST "http://localhost:3000/api/translate" \
 ```
 
 `01_03_upload_mcp` — Connects to two MCP servers simultaneously: `files` (stdio, local filesystem) and `uploadthing` (HTTP, remote). The agent lists workspace files, uploads untracked ones using `{{file:path}}` placeholders, and records results in `uploaded.md`. Edit `01_03_upload_mcp/mcp.json` and replace the uploadthing URL placeholder before running.
-<<<<<<< HEAD
-=======
 
 ## Lesson 04 — Audio Processing
 
@@ -145,11 +143,8 @@ GEMINI_API_KEY=your_gemini_api_key_here
 | `01_04_image_guidance` | `python "01_04_image_guidance/app.py"` | Pose-guided cell-shaded character generation — copies JSON templates, selects pose references, generates and analyzes characters via Gemini/OpenRouter |
 | `01_04_json_image` | `python "01_04_json_image/app.py"` | Token-efficient JSON-based image generation — copies style templates, edits only the subject section, generates images via Gemini/OpenRouter |
 | `01_04_reports` | `python "01_04_reports/app.py"` | Autonomous PDF report generation — reads HTML template and style guide, generates images for visual consistency, converts final HTML to PDF via Playwright |
-<<<<<<< HEAD
-=======
 | `01_04_video` | `python "01_04_video/app.py"` | Interactive video analysis agent — analyze, transcribe, extract scenes/objects/text from local video files or YouTube URLs via Gemini |
 | `01_04_video_generation` | `python "01_04_video_generation/app.py"` | Frame-based video generation agent — generate start/end frames with Gemini, animate transitions with Kling AI via Replicate |
->>>>>>> b4eb695 (Convert JS module 01_04_video_generation to Python)
 
 Run from the project root:
 
@@ -159,11 +154,8 @@ python "01_04_image_recognition/app.py"
 python "01_04_image_editing/app.py"
 python "01_04_json_image/app.py"
 python "01_04_reports/app.py"
-<<<<<<< HEAD
-=======
 python "01_04_video/app.py"
 python "01_04_video_generation/app.py"
->>>>>>> b4eb695 (Convert JS module 01_04_video_generation to Python)
 ```
 
 `01_04_audio` — An interactive REPL agent powered by Google Gemini. Supports transcription (with timestamps, speaker detection, emotion detection, and translation), audio analysis (general, music, speech, sounds), custom audio queries, and text-to-speech generation with 30+ voices. Accepts local audio files (MP3, WAV, AIFF, AAC, OGG, FLAC, M4A, WebM) and YouTube URLs. Files larger than 20 MB use Gemini's resumable upload API. Also connects to a `files-mcp` stdio server for filesystem access.
@@ -181,8 +173,6 @@ python "01_04_video_generation/app.py"
 .venv/Scripts/python -m playwright install chromium
 ```
 
-<<<<<<< HEAD
-=======
 `01_04_video_generation` — A frame-based video generation agent using JSON prompt templates. The model follows a structured workflow: copy `workspace/template.json` to `workspace/prompts/`, edit only the `subject` section, generate a start frame with `create_image`, generate an end frame using the start frame as reference (for character consistency), then call `image_to_video` with both frames to animate the transition using Kling AI (`kwaivgi/kling-v2.5-turbo-pro` via Replicate). Also supports direct text-to-video generation and video quality analysis via Gemini. Requires `REPLICATE_API_TOKEN` and at least one image backend key. Install the `replicate` package first:
 
 ```bash
@@ -191,63 +181,11 @@ python "01_04_video_generation/app.py"
 
 `01_04_video` — An interactive REPL agent for video analysis powered by Google Gemini (`gemini-2.5-flash`). Supports video analysis (general, visual, audio, action), speech transcription with timestamps and speaker detection, scene/keyframe/object/text extraction, and custom natural-language queries. Accepts local video files in `workspace/input/` (MP4, MOV, AVI, WebM, and more) and YouTube URLs. Files larger than 20 MB use Gemini's resumable upload API. Also connects to a `files-mcp` stdio server for filesystem access.
 
->>>>>>> b4eb695 (Convert JS module 01_04_video_generation to Python)
 `01_04_json_image` — A token-efficient JSON-based image generation agent. The model follows a structured workflow: copy `workspace/template.json` (or `workspace/character-template.json`) to `workspace/prompts/`, edit only the `subject` section, read back the full JSON, then call `create_image` with the complete template as the prompt. This approach minimises token usage while preserving rich style/composition constraints encoded in the templates. Supports both OpenRouter (preferred) and native Gemini backends. Output images are saved to `workspace/output/`.
 
 ## Lesson 05 — Human-in-the-loop Agents
 
-Lesson 05 examples require a **Resend** account for email sending. Set these env vars before running:
-
-```bash
-RESEND_API_KEY=re_your_key_here
-RESEND_FROM=noreply@yourdomain.com
-```
-
-| Example | Run | Description |
-|---------|-----|-------------|
-| `01_05_confirmation` | `python "01_05_confirmation/app.py"` | Terminal REPL agent with interactive confirmation gate before sending emails |
-
-Run from the project root:
-
-```bash
-python "01_05_confirmation/app.py"
-```
-
-`01_05_confirmation` — An interactive terminal REPL agent with filesystem access (via `files-mcp` over stdio) and email sending (via Resend). The key lesson feature is a **human-in-the-loop confirmation gate**: before executing `send_email`, the user sees a formatted preview of the email and chooses `[Y] Send once`, `[T] Trust & Send` (skip confirmations for the rest of the session), or `[N] Cancel`. Edit `01_05_confirmation/workspace/whitelist.json` to add allowed recipient addresses or domain patterns.
-
-| Example | Run | Description |
-|---------|-----|-------------|
-| `01_05_agent` | `uvicorn 01_05_agent.app:app` | Production-grade multi-agent REST API with SQLite persistence, MCP, and context pruning |
-
-Run from the project root:
-
-```bash
-# Create the data directory first (only needed once)
-mkdir -p .data
-
-# Start the server (default: http://127.0.0.1:3000)
-.venv/Scripts/python -m uvicorn "01_05_agent.app:app" --host 127.0.0.1 --port 3000
-```
-
-`01_05_agent` — A production-grade multi-agent API server built with FastAPI. Supports multi-turn conversations, tool use (calculator, delegate, send_message, ask_user), MCP server connections, SQLite persistence for agents/sessions/items, context window pruning with LLM-based summarization, per-IP rate limiting, and Langfuse tracing. Agents are defined as YAML templates in `01_05_agent/workspace/`. Provider support: OpenAI, OpenRouter, Google Gemini.
-
-Configure in `01_05_agent/.env` (or the workspace root `.env`):
-
-```bash
-OPENAI_API_KEY=your_key        # or OPENROUTER_API_KEY / GEMINI_API_KEY
-DEFAULT_MODEL=openai:gpt-4o    # optional — provider:model format
-DATABASE_URL=file:.data/agent.db
-```
-
-API endpoints:
-
-```bash
-# Health check
-curl http://127.0.0.1:3000/health
-
-# Interactive API docs
-open http://127.0.0.1:3000/docs
-```
+[WIP]
 
 ## Lesson 01 — Week 2 (Module 02)
 
@@ -271,9 +209,6 @@ python "02_01_agentic_rag/app.py"
 ```
 
 `02_01_agentic_rag` — An agentic RAG (Retrieval-Augmented Generation) system where the model autonomously decides what to search, how deeply to read, and when it has collected enough evidence to answer. Uses the OpenAI Responses API with reasoning enabled (`effort: medium`) and connects to a local `files-mcp` stdio server that exposes `list`, `search`, and `read` tools. The agent runs up to 50 steps per query, executes parallel tool calls within each step, and maintains full conversation history across turns (enabling follow-up questions). Type `exit` to quit, `clear` to reset conversation and token stats. The knowledge base is a set of Polish-language AI_devs course notes (`S01*.md`); the agent always responds in English.
-<<<<<<< HEAD
->>>>>>> 00edc81 (Convert JS module 02_01_agentic_rag to Python)
-=======
 
 ## Lesson 02 — Week 2 (Module 02)
 
@@ -300,9 +235,5 @@ python "02_02_hybrid_rag/app.py"
 `02_02_chunking` — A batch demo that processes `workspace/example.md` through four chunking strategies and saves each result as JSONL to `workspace/`. Pre-generated outputs are included so you can study them without spending tokens. The four strategies are: **characters** (fixed 1000-char windows, 200-char overlap), **separators** (recursive split on Markdown/paragraph/sentence/word boundaries with overlap and section metadata), **context** (separators + one LLM call per chunk to generate a 1-2 sentence situating summary), **topics** (single LLM call for the whole document, returns JSON array of topic-segmented chunks). Requires `OPENAI_API_KEY` or `OPENROUTER_API_KEY` for the context and topics strategies.
 
 `02_02_embedding` — An interactive REPL that demonstrates how text embeddings work and how cosine similarity behaves. Type text strings one at a time; after two or more entries, a color-coded N×N pairwise similarity matrix is printed to the terminal. Green (≥0.60) = similar, yellow (≥0.35) = related, red (<0.35) = distant. Uses `text-embedding-3-small` via the OpenAI Embeddings API. Type `exit` or press Enter to quit.
-<<<<<<< HEAD
->>>>>>> e3d83ea (Convert JS module 02_02_embedding to Python)
-=======
 
 `02_02_hybrid_rag` — A full hybrid RAG (Retrieval-Augmented Generation) agent. On startup, indexes all `.md`/`.txt` files from `workspace/` into a local SQLite database with both FTS5 full-text search (BM25) and sqlite-vec vector similarity search. Runs an interactive REPL where an LLM agent autonomously calls a `search` tool that performs hybrid retrieval and merges results with Reciprocal Rank Fusion (RRF). The database is persisted at `.data/hybrid.db`. Commands: `exit`, `clear` (reset conversation + stats), `reindex` (re-scan workspace). Uses `text-embedding-3-small` for embeddings and `gpt-4.1` with reasoning for the agent.
->>>>>>> e7dbbe3 (Convert JS module 02_02_hybrid_rag to Python)
