@@ -279,13 +279,17 @@ python "02_01_agentic_rag/app.py"
 
 | Example | Run | Description |
 |---------|-----|-------------|
+| `02_02_chunking` | `python "02_02_chunking/app.py"` | Four text chunking strategies compared: fixed characters, recursive separators, LLM-enriched context, AI-driven topics |
 | `02_02_embedding` | `python "02_02_embedding/app.py"` | Interactive REPL demonstrating text embeddings and cosine similarity with a color-coded pairwise matrix |
 
 Run from the project root:
 
 ```bash
+python "02_02_chunking/app.py"
 python "02_02_embedding/app.py"
 ```
+
+`02_02_chunking` — A batch demo that processes `workspace/example.md` through four chunking strategies and saves each result as JSONL to `workspace/`. Pre-generated outputs are included so you can study them without spending tokens. The four strategies are: **characters** (fixed 1000-char windows, 200-char overlap), **separators** (recursive split on Markdown/paragraph/sentence/word boundaries with overlap and section metadata), **context** (separators + one LLM call per chunk to generate a 1-2 sentence situating summary), **topics** (single LLM call for the whole document, returns JSON array of topic-segmented chunks). Requires `OPENAI_API_KEY` or `OPENROUTER_API_KEY` for the context and topics strategies.
 
 `02_02_embedding` — An interactive REPL that demonstrates how text embeddings work and how cosine similarity behaves. Type text strings one at a time; after two or more entries, a color-coded N×N pairwise similarity matrix is printed to the terminal. Green (≥0.60) = similar, yellow (≥0.35) = related, red (<0.35) = distant. Uses `text-embedding-3-small` via the OpenAI Embeddings API. Type `exit` or press Enter to quit.
 >>>>>>> e3d83ea (Convert JS module 02_02_embedding to Python)
