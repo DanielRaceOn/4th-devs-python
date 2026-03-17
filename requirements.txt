@@ -9,4 +9,8 @@ playwright>=1.40.0
 >>>>>>> 1cfd078 (Convert JS module 01_04_reports to Python)
 =======
 replicate>=1.0.0
+<<<<<<< HEAD
 >>>>>>> b4eb695 (Convert JS module 01_04_video_generation to Python)
+=======
+sqlite-vec>=0.1.6
+>>>>>>> e7dbbe3 (Convert JS module 02_02_hybrid_rag to Python)
