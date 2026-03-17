@@ -17,11 +17,10 @@ MCP (Model Context Protocol) client for connecting to file system server.
 import json
 import sys
 from pathlib import Path
-from typing import Any, Optional, list
+from typing import Any, Optional
 
 try:
-    from mcp.client.stdio import StdioClientTransport
-    from mcp.client.session import ClientSession
+    from mcp import StdioServerParameters, stdio_client, ClientSession
 except ImportError:
     raise ImportError(
         "MCP SDK not installed. Install with: pip install mcp"
@@ -69,10 +68,12 @@ async def create_mcp_client(server_name: str = "files"):
     }
 
     # Create transport and client
-    transport = StdioClientTransport(
-        command=server_config["command"],
-        args=server_config["args"],
-        env=env,
+    transport = stdio_client(
+        StdioServerParameters(
+            command=server_config["command"],
+            args=server_config["args"],
+            env=env,
+        )
     )
 
     client = ClientSession(transport)
