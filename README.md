@@ -271,4 +271,21 @@ python "02_01_agentic_rag/app.py"
 ```
 
 `02_01_agentic_rag` — An agentic RAG (Retrieval-Augmented Generation) system where the model autonomously decides what to search, how deeply to read, and when it has collected enough evidence to answer. Uses the OpenAI Responses API with reasoning enabled (`effort: medium`) and connects to a local `files-mcp` stdio server that exposes `list`, `search`, and `read` tools. The agent runs up to 50 steps per query, executes parallel tool calls within each step, and maintains full conversation history across turns (enabling follow-up questions). Type `exit` to quit, `clear` to reset conversation and token stats. The knowledge base is a set of Polish-language AI_devs course notes (`S01*.md`); the agent always responds in English.
+<<<<<<< HEAD
 >>>>>>> 00edc81 (Convert JS module 02_01_agentic_rag to Python)
+=======
+
+## Lesson 02 — Week 2 (Module 02)
+
+| Example | Run | Description |
+|---------|-----|-------------|
+| `02_02_embedding` | `python "02_02_embedding/app.py"` | Interactive REPL demonstrating text embeddings and cosine similarity with a color-coded pairwise matrix |
+
+Run from the project root:
+
+```bash
+python "02_02_embedding/app.py"
+```
+
+`02_02_embedding` — An interactive REPL that demonstrates how text embeddings work and how cosine similarity behaves. Type text strings one at a time; after two or more entries, a color-coded N×N pairwise similarity matrix is printed to the terminal. Green (≥0.60) = similar, yellow (≥0.35) = related, red (<0.35) = distant. Uses `text-embedding-3-small` via the OpenAI Embeddings API. Type `exit` or press Enter to quit.
+>>>>>>> e3d83ea (Convert JS module 02_02_embedding to Python)
