@@ -1,0 +1,74 @@
+[
+  {
+    "id": "task-001",
+    "title": "Review deploy decision for v2.3",
+    "status": "open",
+    "priority": "high",
+    "due": "2026-02-13",
+    "project": "Platform",
+    "tags": ["ops", "deploy"]
+  },
+  {
+    "id": "task-002",
+    "title": "Prepare sprint review slides",
+    "status": "open",
+    "priority": "high",
+    "due": "2026-02-13",
+    "project": "Product",
+    "tags": ["meeting", "q1"]
+  },
+  {
+    "id": "task-003",
+    "title": "Submit tax documents to accountant",
+    "status": "open",
+    "priority": "high",
+    "due": "2026-02-11",
+    "project": "Personal",
+    "tags": ["finance", "tax"]
+  },
+  {
+    "id": "task-004",
+    "title": "Finalize pricing model draft",
+    "status": "blocked",
+    "priority": "medium",
+    "due": "2026-02-15",
+    "project": "Sales",
+    "tags": ["pricing", "enterprise"]
+  },
+  {
+    "id": "task-005",
+    "title": "Update API documentation",
+    "status": "blocked",
+    "priority": "medium",
+    "due": "2026-02-14",
+    "project": "Engineering",
+    "tags": ["docs", "blocked-on-merge"]
+  },
+  {
+    "id": "task-006",
+    "title": "Weekly team retrospective",
+    "status": "done",
+    "priority": "medium",
+    "due": "2026-02-12",
+    "project": "Team",
+    "tags": ["retro"]
+  },
+  {
+    "id": "task-007",
+    "title": "Schedule Acme Corp follow-up call",
+    "status": "open",
+    "priority": "medium",
+    "due": "2026-02-17",
+    "project": "Sales",
+    "tags": ["client", "acme"]
+  },
+  {
+    "id": "task-008",
+    "title": "Review Stripe invoice",
+    "status": "open",
+    "priority": "low",
+    "due": "2026-02-20",
+    "project": "Finance",
+    "tags": ["billing"]
+  }
+]

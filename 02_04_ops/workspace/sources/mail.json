@@ -1,0 +1,56 @@
+[
+  {
+    "id": "mail-001",
+    "from": "sarah@acme-corp.com",
+    "subject": "Re: Q1 integration timeline — follow-up",
+    "snippet": "Hi, wanted to check in on the integration timeline we discussed. Can we schedule a call next week to align on milestones?",
+    "date": "2026-02-13T08:15:00.000Z",
+    "labels": ["inbox", "important"],
+    "read": false
+  },
+  {
+    "id": "mail-002",
+    "from": "billing@stripe.com",
+    "subject": "Invoice #INV-2026-002 ready for review",
+    "snippet": "Your monthly invoice for February 2026 is ready. Amount: $847. Due by Feb 20.",
+    "date": "2026-02-13T07:30:00.000Z",
+    "labels": ["inbox", "finance"],
+    "read": false
+  },
+  {
+    "id": "mail-003",
+    "from": "mike@team.dev",
+    "subject": "Team sync — can we do 2pm instead of 3pm?",
+    "snippet": "Hey team, I have a conflict with the 3pm sync. Would 2pm work for everyone? Need to align on sprint priorities.",
+    "date": "2026-02-13T09:00:00.000Z",
+    "labels": ["inbox"],
+    "read": false
+  },
+  {
+    "id": "mail-004",
+    "from": "newsletter@devweekly.io",
+    "subject": "Dev Weekly #412 — Rust 2.0 preview, new AI tooling",
+    "snippet": "This week: Rust 2.0 release candidate, 5 new AI coding assistants compared, and tips for faster CI pipelines.",
+    "date": "2026-02-12T18:00:00.000Z",
+    "labels": ["inbox", "newsletter"],
+    "read": true
+  },
+  {
+    "id": "mail-005",
+    "from": "ops@platform.io",
+    "subject": "URGENT: Deploy decision needed — prod rollout",
+    "snippet": "We need a go/no-go on the v2.3 deploy by EOD. Rollback window closes at 6pm. Please confirm.",
+    "date": "2026-02-13T06:45:00.000Z",
+    "labels": ["inbox", "urgent"],
+    "read": false
+  },
+  {
+    "id": "mail-006",
+    "from": "sarah@acme-corp.com",
+    "subject": "Re: Q1 integration timeline",
+    "snippet": "Thanks for the update. I'll share the doc with our team and get back to you by Friday.",
+    "date": "2026-02-12T14:22:00.000Z",
+    "labels": ["inbox", "sent"],
+    "read": true
+  }
+]
