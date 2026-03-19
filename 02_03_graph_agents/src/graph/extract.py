@@ -34,7 +34,10 @@ RELATIONSHIP_TYPES = {
 
 # ── Canonical name normalization ──────────────────────────────────────────────
 
-ACRONYMS = {"LLM", "LLMS", "GPT", "API", "JSON", "XML", "YML", "COT", "HTML", "URL", "ID"}
+# Note: JS original stores "LLMs" and "CoT" (mixed-case) but tests with
+# word.toUpperCase(), so those two entries never actually match in JS.
+# We mirror the JS runtime behavior: only these entries are live matches.
+ACRONYMS = {"LLM", "GPT", "API", "JSON", "XML", "YML", "HTML", "URL", "ID"}
 
 
 def _title_case(s: str) -> str:

@@ -329,14 +329,6 @@ async def safe_read_cypher(
 
     safe_cypher = cypher if "LIMIT" in upper else f"{cypher}\nLIMIT {limit}"
     records = await read_query(driver, safe_cypher, params)
-
-    def _coerce(v):
-        try:
-            return int(v)
-        except (TypeError, ValueError, AttributeError):
-            return v
-
-    return [
-        {key: _coerce(r[key]) if hasattr(r[key], "value") else r[key] for key in r.keys()}
-        for r in records
-    ]
+    # neo4j-driver v5 returns native Python types from .data(), so no
+    # manual coercion is needed — plain dicts are already JSON-serializable.
+    return records
