@@ -1,16 +1,8 @@
 httpx>=0.27.0
 python-dotenv>=1.0.0
 mcp>=1.8.0
-<<<<<<< HEAD
-=======
 python-frontmatter>=1.1.0
 playwright>=1.40.0
-<<<<<<< HEAD
->>>>>>> 1cfd078 (Convert JS module 01_04_reports to Python)
-=======
 replicate>=1.0.0
-<<<<<<< HEAD
->>>>>>> b4eb695 (Convert JS module 01_04_video_generation to Python)
-=======
 sqlite-vec>=0.1.6
->>>>>>> e7dbbe3 (Convert JS module 02_02_hybrid_rag to Python)
+neo4j>=5.11.0
