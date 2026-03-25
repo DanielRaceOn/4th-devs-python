@@ -23,6 +23,7 @@ an ``async with`` block — the stdio subprocess stays alive for the block's lif
 
 import json
 import logging
+import sys
 from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Any, AsyncGenerator
@@ -75,11 +76,16 @@ async def create_mcp_client(
     if not server_cfg:
         raise RuntimeError(f'MCP server "{server_name}" not found in mcp.json')
 
+    # Use the current venv Python if the config says "python"/"python3"
+    command = server_cfg["command"]
+    if command in ("python", "python3"):
+        command = sys.executable
+
     log.info(f"Spawning MCP server: {server_name}")
-    log.info(f"Command: {server_cfg['command']} {' '.join(server_cfg.get('args', []))}")
+    log.info(f"Command: {command} {' '.join(server_cfg.get('args', []))}")
 
     params = StdioServerParameters(
-        command=server_cfg["command"],
+        command=command,
         args=server_cfg.get("args", []),
         env=server_cfg.get("env"),  # merged with default inherited env by the SDK
         cwd=str(PROJECT_ROOT),

@@ -1,8 +1,8 @@
 {
   "mcpServers": {
     "files": {
-      "command": "npx",
-      "args": ["tsx", "../mcp/files-mcp/src/index.ts"],
+      "command": "python",
+      "args": ["../mcp/files-mcp/server.py"],
       "env": {
         "LOG_LEVEL": "info",
         "FS_ROOT": "."

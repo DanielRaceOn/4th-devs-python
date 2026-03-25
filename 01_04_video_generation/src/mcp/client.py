@@ -16,6 +16,8 @@ MCP (Model Context Protocol) client for connecting to file system server.
 
 import json
 import os
+import sys
+from contextlib import AsyncExitStack
 from pathlib import Path
 from typing import Any
 
@@ -29,6 +31,26 @@ from ..helpers.logger import log
 PROJECT_ROOT = Path(__file__).parent.parent.parent
 
 
+class McpSession:
+    """Wraps a ClientSession together with its lifecycle stack."""
+
+    def __init__(self, session: ClientSession, stack: AsyncExitStack) -> None:
+        self._session = session
+        self._stack = stack
+
+    async def list_tools(self):
+        """Proxy to ``ClientSession.list_tools``."""
+        return await self._session.list_tools()
+
+    async def call_tool(self, name: str, arguments: dict):
+        """Proxy to ``ClientSession.call_tool``."""
+        return await self._session.call_tool(name, arguments=arguments)
+
+    async def close(self) -> None:
+        """Close all managed context managers (subprocess + session)."""
+        await self._stack.aclose()
+
+
 async def load_mcp_config() -> dict:
     """Load MCP server configuration from mcp.json."""
     config_path = PROJECT_ROOT / "mcp.json"
@@ -36,15 +58,14 @@ async def load_mcp_config() -> dict:
         return json.load(f)
 
 
-async def create_mcp_client(server_name: str = "files"):
-    """
-    Create an MCP client for a specific server.
+async def create_mcp_client(server_name: str = "files") -> McpSession:
+    """Create and initialise an MCP client for a named server.
 
     Args:
-        server_name: Name of the server in mcp.json
+        server_name: Key in ``mcp.json`` mcpServers dict.
 
     Returns:
-        Connected MCP client
+        ``McpSession`` wrapping the connected ``ClientSession``.
     """
     config = await load_mcp_config()
     server_config = config["mcpServers"].get(server_name)
@@ -52,8 +73,13 @@ async def create_mcp_client(server_name: str = "files"):
     if not server_config:
         raise Exception(f'MCP server "{server_name}" not found in mcp.json')
 
+    # Use the current venv Python if the config says "python"/"python3"
+    command = server_config["command"]
+    if command in ("python", "python3"):
+        command = sys.executable
+
     log.info(f"Spawning MCP server: {server_name}")
-    log.info(f"Command: {server_config['command']} {' '.join(server_config['args'])}")
+    log.info(f"Command: {command} {' '.join(server_config['args'])}")
 
     env = {
         "PATH": os.environ.get("PATH", ""),
@@ -62,27 +88,30 @@ async def create_mcp_client(server_name: str = "files"):
         **(server_config.get("env") or {}),
     }
 
-    transport = stdio_client(
-        StdioServerParameters(
-            command=server_config["command"],
-            args=server_config["args"],
-            env=env,
-        )
+    params = StdioServerParameters(
+        command=command,
+        args=server_config["args"],
+        env=env,
+        cwd=str(PROJECT_ROOT),
     )
 
-    client = ClientSession(transport)
-    await client.initialize()
+    stack = AsyncExitStack()
+    await stack.__aenter__()
+    read, write = await stack.enter_async_context(stdio_client(params))
+    session = await stack.enter_async_context(ClientSession(read, write))
+    await session.initialize()
+
     log.success(f"Connected to {server_name} via stdio")
-    return client
+    return McpSession(session, stack)
 
 
-async def list_mcp_tools(client) -> list:
-    """List all tools available on the MCP server."""
+async def list_mcp_tools(client: McpSession) -> list:
+    """List all tools available on the connected MCP server."""
     response = await client.list_tools()
     return response.tools
 
 
-async def call_mcp_tool(client, name: str, args: dict) -> Any:
+async def call_mcp_tool(client: McpSession, name: str, args: dict) -> Any:
     """
     Call a tool on the MCP server.
 

@@ -17,6 +17,7 @@ session wrapper with list_tools / call_tool / close interface.
 
 import json
 import os
+import sys
 from contextlib import AsyncExitStack
 from pathlib import Path
 from typing import Any, Optional
@@ -91,8 +92,13 @@ async def create_mcp_client(server_name: str = "files") -> McpSession:
     if not server_config:
         raise ValueError(f'MCP server "{server_name}" not found in mcp.json')
 
+    # Use the current venv Python if the config says "python"/"python3"
+    command = server_config["command"]
+    if command in ("python", "python3"):
+        command = sys.executable
+
     log.info(f"Spawning MCP server: {server_name}")
-    log.info(f"Command: {server_config['command']} {' '.join(server_config['args'])}")
+    log.info(f"Command: {command} {' '.join(server_config['args'])}")
 
     env = {
         **os.environ,
@@ -100,7 +106,7 @@ async def create_mcp_client(server_name: str = "files") -> McpSession:
     }
 
     params = StdioServerParameters(
-        command=server_config["command"],
+        command=command,
         args=server_config["args"],
         env=env,
         cwd=str(_PROJECT_ROOT),

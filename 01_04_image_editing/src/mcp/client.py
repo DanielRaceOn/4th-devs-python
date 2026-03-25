@@ -18,6 +18,7 @@ alive for the full lifetime of the returned session wrapper.
 
 import json
 import os
+import sys
 from contextlib import AsyncExitStack
 from pathlib import Path
 from typing import Any
@@ -94,8 +95,13 @@ async def create_mcp_client(server_name: str = "files") -> McpSession:
     if not server_config:
         raise Exception(f'MCP server "{server_name}" not found in mcp.json')
 
+    # Use the current venv Python if the config says "python"/"python3"
+    command = server_config["command"]
+    if command in ("python", "python3"):
+        command = sys.executable
+
     log.info(f"Spawning MCP server: {server_name}")
-    log.info(f"Command: {server_config['command']} {' '.join(server_config['args'])}")
+    log.info(f"Command: {command} {' '.join(server_config['args'])}")
 
     env = {
         "PATH": os.environ.get("PATH", ""),
@@ -105,9 +111,10 @@ async def create_mcp_client(server_name: str = "files") -> McpSession:
     }
 
     params = StdioServerParameters(
-        command=server_config["command"],
+        command=command,
         args=server_config["args"],
         env=env,
+        cwd=str(PROJECT_ROOT),
     )
 
     # AsyncExitStack keeps both the stdio subprocess and the session alive
