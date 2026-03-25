@@ -16,14 +16,45 @@ extensibility but not wired into the current agent flow.
 """
 
 import json
+import sys
+from contextlib import AsyncExitStack
 from pathlib import Path
 from typing import Any, Dict, List
 
-from mcp import ClientSession, StdioServerParameters, stdio_client
+from mcp import ClientSession, StdioServerParameters
+from mcp.client.stdio import stdio_client
 
 from ..helpers import logger as log
 
 _PROJECT_ROOT = Path(__file__).parent.parent.parent  # 02_02_hybrid_rag/
+
+
+class McpSession:
+    """Wraps a ClientSession together with its lifecycle stack."""
+
+    def __init__(self, session: ClientSession, stack: AsyncExitStack) -> None:
+        self._session = session
+        self._stack = stack
+
+    async def list_tools(self) -> list:
+        """Return all tools exposed by the MCP server."""
+        result = await self._session.list_tools()
+        return result.tools
+
+    async def call_tool(self, name: str, args: dict) -> Any:
+        """Call a named MCP tool and return its result payload."""
+        result = await self._session.call_tool(name, args)
+        text_content = next((c for c in result.content if c.type == "text"), None)
+        if text_content:
+            try:
+                return json.loads(text_content.text)
+            except (json.JSONDecodeError, ValueError):
+                return text_content.text
+        return result
+
+    async def close(self) -> None:
+        """Shut down the MCP session and subprocess."""
+        await self._stack.aclose()
 
 
 async def _load_mcp_config() -> Dict[str, Any]:
@@ -32,14 +63,14 @@ async def _load_mcp_config() -> Dict[str, Any]:
     return json.loads(config_path.read_text(encoding="utf-8"))
 
 
-async def create_mcp_client(server_name: str = "files") -> ClientSession:
+async def create_mcp_client(server_name: str = "files") -> McpSession:
     """Create and connect an MCP client for the named server.
 
     Args:
         server_name: Key in ``mcp.json`` ``mcpServers`` dict.
 
     Returns:
-        Connected :class:`mcp.ClientSession`.
+        Connected :class:`McpSession`.
 
     Raises:
         KeyError: If *server_name* is not found in ``mcp.json``.
@@ -50,31 +81,36 @@ async def create_mcp_client(server_name: str = "files") -> ClientSession:
     if not server_config:
         raise KeyError(f'MCP server "{server_name}" not found in mcp.json')
 
-    log.info(f"Spawning MCP server: {server_name}")
-    log.info(f"Command: {server_config['command']} {' '.join(server_config['args'])}")
+    # Use the current venv Python if the config says "python"/"python3"
+    command = server_config["command"]
+    if command in ("python", "python3"):
+        command = sys.executable
 
-    transport = stdio_client(
-        StdioServerParameters(
-            command=server_config["command"],
-            args=server_config["args"],
-            env=server_config.get("env"),
-        )
+    log.info(f"Spawning MCP server: {server_name}")
+    log.info(f"Command: {command} {' '.join(server_config['args'])}")
+
+    params = StdioServerParameters(
+        command=command,
+        args=server_config["args"],
+        env=server_config.get("env"),
+        cwd=str(_PROJECT_ROOT),
     )
 
-    client = ClientSession(transport)
-    await client.initialize()
+    stack = AsyncExitStack()
+    read, write = await stack.enter_async_context(stdio_client(params))
+    session = await stack.enter_async_context(ClientSession(read, write))
+    await session.initialize()
 
     log.success(f"Connected to {server_name} via stdio")
-    return client
+    return McpSession(session, stack)
 
 
-async def list_mcp_tools(client: ClientSession) -> List[Any]:
+async def list_mcp_tools(client: McpSession) -> List[Any]:
     """List all tools available on the connected MCP server."""
-    result = await client.list_tools()
-    return result.tools
+    return await client.list_tools()
 
 
-async def call_mcp_tool(client: ClientSession, name: str, args: Dict[str, Any]) -> Any:
+async def call_mcp_tool(client: McpSession, name: str, args: Dict[str, Any]) -> Any:
     """Call a tool on the MCP server and return its result.
 
     Attempts to parse text content as JSON; falls back to the raw string.
@@ -87,16 +123,7 @@ async def call_mcp_tool(client: ClientSession, name: str, args: Dict[str, Any]) 
     Returns:
         Parsed JSON or raw text from the tool response.
     """
-    result = await client.call_tool(name, args)
-
-    for content in result.content:
-        if content.type == "text":
-            try:
-                return json.loads(content.text)
-            except json.JSONDecodeError:
-                return content.text
-
-    return result
+    return await client.call_tool(name, args)
 
 
 def mcp_tools_to_openai(mcp_tools: List[Any]) -> List[Dict[str, Any]]:
