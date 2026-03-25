@@ -1,0 +1,37 @@
+[
+  {
+    "id": "note-001",
+    "title": "Pricing model draft — enterprise tiers",
+    "content": "Draft structure:\n- Starter: $99/mo, 5 seats\n- Growth: $299/mo, 25 seats\n- Enterprise: custom, SLA + dedicated support\n\nOpen question: annual discount %? Competitor analysis suggests 15–20%.",
+    "tags": ["pricing", "draft", "enterprise"],
+    "updatedAt": "2026-02-12T16:30:00.000Z"
+  },
+  {
+    "id": "note-002",
+    "title": "Deploy strategy — open question",
+    "content": "Need to decide: blue-green vs canary for v2.3. Ops prefers blue-green for simplicity. Eng wants canary for gradual rollout. Decision needed by EOD Friday.",
+    "tags": ["deploy", "open-question", "ops"],
+    "updatedAt": "2026-02-12T11:00:00.000Z"
+  },
+  {
+    "id": "note-003",
+    "title": "Personal — dentist appointment",
+    "content": "Book dentist for March. Last checkup was Oct 2025.",
+    "tags": ["personal", "reminder"],
+    "updatedAt": "2026-02-10T09:00:00.000Z"
+  },
+  {
+    "id": "note-004",
+    "title": "Research: agent memory architectures",
+    "content": "Comparing approaches:\n- Episodic vs semantic memory\n- LangGraph checkpointing\n- Vector store for embeddings\n\nKey finding: hybrid approach works best for multi-turn conversations.",
+    "tags": ["research", "agents", "memory"],
+    "updatedAt": "2026-02-12T14:45:00.000Z"
+  },
+  {
+    "id": "note-005",
+    "title": "Meeting notes — Acme Corp call",
+    "content": "Sarah from Acme: interested in Q1 integration. Timeline: they need API access by March 15. Follow-up: send pricing doc and schedule technical deep-dive.",
+    "tags": ["client", "acme", "meeting-notes"],
+    "updatedAt": "2026-02-11T17:00:00.000Z"
+  }
+]

@@ -237,3 +237,31 @@ python "02_02_hybrid_rag/app.py"
 `02_02_embedding` — An interactive REPL that demonstrates how text embeddings work and how cosine similarity behaves. Type text strings one at a time; after two or more entries, a color-coded N×N pairwise similarity matrix is printed to the terminal. Green (≥0.60) = similar, yellow (≥0.35) = related, red (<0.35) = distant. Uses `text-embedding-3-small` via the OpenAI Embeddings API. Type `exit` or press Enter to quit.
 
 `02_02_hybrid_rag` — A full hybrid RAG (Retrieval-Augmented Generation) agent. On startup, indexes all `.md`/`.txt` files from `workspace/` into a local SQLite database with both FTS5 full-text search (BM25) and sqlite-vec vector similarity search. Runs an interactive REPL where an LLM agent autonomously calls a `search` tool that performs hybrid retrieval and merges results with Reciprocal Rank Fusion (RRF). The database is persisted at `.data/hybrid.db`. Commands: `exit`, `clear` (reset conversation + stats), `reindex` (re-scan workspace). Uses `text-embedding-3-small` for embeddings and `gpt-4.1` with reasoning for the agent.
+
+## Lesson 03 — Week 2 (Module 02)
+
+The `02_03_graph_agents` example requires **Neo4j 5.11+** (with vector index support) running locally, and the `neo4j` Python driver. Install the driver first:
+
+```bash
+.venv/Scripts/python -m pip install neo4j
+```
+
+Start Neo4j (default: `bolt://localhost:7687`, user `neo4j`, password `password`). Override via env vars:
+
+```bash
+NEO4J_URI=bolt://localhost:7687
+NEO4J_USERNAME=neo4j
+NEO4J_PASSWORD=password
+```
+
+| Example | Run | Description |
+|---------|-----|-------------|
+| `02_03_graph_agents` | `python "02_03_graph_agents/app.py"` | Graph RAG agent — Neo4j knowledge graph with hybrid retrieval (FTS + vector + RRF), entity extraction, and 8 agent tools |
+
+Run from the project root:
+
+```bash
+python "02_03_graph_agents/app.py"
+```
+
+`02_03_graph_agents` — A full Graph RAG agent backed by Neo4j. On startup, indexes all `.md`/`.txt` files from `02_03_graph_agents/workspace/` into a Neo4j property graph: documents are chunked, chunk embeddings are generated, entities and relationships are extracted via LLM, and entity embeddings are written alongside chunk nodes. At query time an LLM agent uses 8 tools: **search** (hybrid BM25 + cosine via RRF), **explore** (expand entity neighbors), **connect** (shortest path between two entities), **cypher** (read-only Cypher queries), **learn** (index new files or raw text at runtime), **forget** (remove a document and its graph data), **merge\_entities** (canonicalize duplicates), **audit** (graph health report). Commands: `exit`, `clear` (reset conversation + stats), `reindex` (re-scan workspace), `reindex --force` (wipe graph then re-index). Uses `text-embedding-3-small` for embeddings and `gpt-5.2` with reasoning for the agent.
