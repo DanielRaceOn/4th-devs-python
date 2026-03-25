@@ -125,7 +125,7 @@ curl -X POST "http://localhost:3000/api/translate" \
 
 `01_03_upload_mcp` — Connects to two MCP servers simultaneously: `files` (stdio, local filesystem) and `uploadthing` (HTTP, remote). The agent lists workspace files, uploads untracked ones using `{{file:path}}` placeholders, and records results in `uploaded.md`. Edit `01_03_upload_mcp/mcp.json` and replace the uploadthing URL placeholder before running.
 
-## Lesson 04 — Audio Processing
+## Lesson 04 — Media Processing
 
 The Lesson 04 examples use the **Google Gemini API** for audio/image generation. Set the key before running:
 
@@ -185,7 +185,60 @@ python "01_04_video_generation/app.py"
 
 ## Lesson 05 — Human-in-the-loop Agents
 
-[WIP]
+Lesson 05 examples require a **Resend** account for email sending. Set these env vars before running:
+
+```bash
+RESEND_API_KEY=re_your_key_here
+RESEND_FROM=noreply@yourdomain.com
+```
+
+| Example | Run | Description |
+|---------|-----|-------------|
+| `01_05_confirmation` | `python "01_05_confirmation/app.py"` | Terminal REPL agent with interactive confirmation gate before sending emails |
+
+Run from the project root:
+
+```bash
+python "01_05_confirmation/app.py"
+```
+
+`01_05_confirmation` — An interactive terminal REPL agent with filesystem access (via `files-mcp` over stdio) and email sending (via Resend). The key lesson feature is a **human-in-the-loop confirmation gate**: before executing `send_email`, the user sees a formatted preview of the email and chooses `[Y] Send once`, `[T] Trust & Send` (skip confirmations for the rest of the session), or `[N] Cancel`. Edit `01_05_confirmation/workspace/whitelist.json` to add allowed recipient addresses or domain patterns.
+
+| Example | Run | Description |
+|---------|-----|-------------|
+| `01_05_agent` | `uvicorn 01_05_agent.app:app` | Production-grade multi-agent REST API with SQLite persistence, MCP, and context pruning |
+
+Run from the project root:
+
+```bash
+# Create the data directory first (only needed once)
+mkdir -p .data
+
+# Start the server (default: http://127.0.0.1:3000)
+.venv/Scripts/python -m uvicorn "01_05_agent.app:app" --host 127.0.0.1 --port 3000
+```
+
+`01_05_agent` — A production-grade multi-agent API server built with FastAPI. Supports multi-turn conversations, tool use (calculator, delegate, send_message, ask_user), MCP server connections, SQLite persistence for agents/sessions/items, context window pruning with LLM-based summarization, per-IP rate limiting, and Langfuse tracing. Agents are defined as YAML templates in `01_05_agent/workspace/`. Provider support: OpenAI, OpenRouter, Google Gemini.
+
+Configure in `01_05_agent/.env` (or the workspace root `.env`):
+
+```bash
+OPENAI_API_KEY=your_key        # or OPENROUTER_API_KEY / GEMINI_API_KEY
+DEFAULT_MODEL=openai:gpt-4o    # optional — provider:model format
+DATABASE_URL=file:.data/agent.db
+```
+
+API endpoints:
+
+```bash
+# Health check
+curl http://127.0.0.1:3000/health
+
+# Interactive API docs
+open http://127.0.0.1:3000/docs
+```
+
+---
 
 ## Lesson 01 — Week 2 (Module 02)
 
@@ -265,3 +318,44 @@ python "02_03_graph_agents/app.py"
 ```
 
 `02_03_graph_agents` — A full Graph RAG agent backed by Neo4j. On startup, indexes all `.md`/`.txt` files from `02_03_graph_agents/workspace/` into a Neo4j property graph: documents are chunked, chunk embeddings are generated, entities and relationships are extracted via LLM, and entity embeddings are written alongside chunk nodes. At query time an LLM agent uses 8 tools: **search** (hybrid BM25 + cosine via RRF), **explore** (expand entity neighbors), **connect** (shortest path between two entities), **cypher** (read-only Cypher queries), **learn** (index new files or raw text at runtime), **forget** (remove a document and its graph data), **merge\_entities** (canonicalize duplicates), **audit** (graph health report). Commands: `exit`, `clear` (reset conversation + stats), `reindex` (re-scan workspace), `reindex --force` (wipe graph then re-index). Uses `text-embedding-3-small` for embeddings and `gpt-5.2` with reasoning for the agent.
+
+## Lesson 04 — Week 2 (Module 02)
+
+| Example | Run | Description |
+|---------|-----|-------------|
+| `02_04_ops` | `python "02_04_ops/app.py"` | Daily ops generator — recursive multi-agent orchestrator that delegates sub-tasks to specialised agents and produces a structured daily ops report |
+
+Run from the project root:
+
+```bash
+python "02_04_ops/app.py"
+```
+
+`02_04_ops` — A recursive multi-agent orchestrator that generates a structured daily operations report. The root agent loads its template from `workspace/agents/` and delegates sub-tasks to specialised agents (e.g. `researcher`, `writer`) via a `delegate` tool. Each sub-agent can itself delegate further, enabling a tree of concurrent LLM calls. Results are assembled into a final markdown report and printed to the terminal. A scripted demo is available in `02_04_ops/demo/example.md`. Requires `OPENAI_API_KEY` or `OPENROUTER_API_KEY`.
+
+## Lesson 05 — Week 2 (Module 02)
+
+| Example | Run | Description |
+|---------|-----|-------------|
+| `02_05_agent` | `uvicorn 02_05_agent.src.app:app --port 3001` | Context-engineering agent server with observational memory — observer, reflector, token estimation, and file tools |
+
+Run from the project root (two terminals):
+
+```bash
+# Terminal 1 — start the server
+.venv/Scripts/python -m uvicorn 02_05_agent.src.app:app --port 3001
+
+# Terminal 2 — run the scripted demo conversation
+.venv/Scripts/python "02_05_agent/demo.py"
+```
+
+`02_05_agent` — A FastAPI HTTP server demonstrating **context engineering** through an observational memory system (based on [Mastra's Observational Memory](https://mastra.ai/blog/observational-memory)). The agent uses three coordinated subsystems: an **observer** that periodically distils raw conversation history into structured observation notes, a **reflector** that compresses those notes when they exceed a token budget (up to three compression levels), and a **token estimator** with live API calibration (starts at `chars/4`, converges on real ratios after the first API call). The agent template (`workspace/agents/alice.agent.md`) is loaded from a YAML front-matter markdown file and has access to `read_file` and `write_file` tools, both sandboxed to `workspace/`.
+
+API endpoints:
+
+```bash
+POST /api/chat                        # send a message; returns response + memory metrics
+GET  /api/sessions                    # list active sessions
+GET  /api/sessions/{id}/memory        # full memory state for a session
+POST /api/sessions/{id}/flush         # force-observe all remaining messages
+```
