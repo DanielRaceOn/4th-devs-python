@@ -13,7 +13,6 @@ files-mcp/
 ├── server.py            Entry point — FastMCP instance, tool registration, if __name__ == "__main__" runner
 ├── config.py            Env var resolution (FS_ROOT, LOG_LEVEL), logging setup, constants
 ├── __init__.py          Package marker
-├── __main__.py          Unused currently; reserved for future python -m invocation (pattern 2)
 │
 ├── tools/               One file per MCP tool
 │   ├── fs_read.py       Read files and list directories
