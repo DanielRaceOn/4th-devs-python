@@ -4,10 +4,7 @@
 
 """
 ### Description:
-files-mcp — sandboxed filesystem MCP server (Python package).
-Provides fs_read, fs_write, fs_search, and fs_manage tools over stdio transport.
-
-Run: python -m mcp.files-mcp
+Utility helpers for the files-mcp package.
 
 ---
 
@@ -17,3 +14,7 @@ Run: python -m mcp.files-mcp
 @License:       Copyright 2025 RaceOn GmbH, All rights reserved
 
 """
+
+from utils.errors import OUT_OF_SCOPE_ERROR, error_response
+
+__all__ = ["OUT_OF_SCOPE_ERROR", "error_response"]
