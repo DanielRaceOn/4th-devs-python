@@ -359,3 +359,61 @@ GET  /api/sessions                    # list active sessions
 GET  /api/sessions/{id}/memory        # full memory state for a session
 POST /api/sessions/{id}/flush         # force-observe all remaining messages
 ```
+
+## Lesson 01 — Week 3 (Module 03)
+
+### Prerequisites
+
+Both `03_01` examples require **Langfuse** for tracing and evaluation. Set these env vars in the respective module's `.env` file:
+
+```bash
+LANGFUSE_PUBLIC_KEY=pk-...
+LANGFUSE_SECRET_KEY=sk-...
+LANGFUSE_BASE_URL=https://cloud.langfuse.com   # optional, defaults to cloud
+```
+
+Tracing is optional — both servers start and function fully without Langfuse keys. Prompts are only synced and traces only recorded when keys are present.
+
+| Example | Run | Description |
+|---------|-----|-------------|
+| `03_01_observability` | `python "03_01_observability/app.py"` | Alice agent server with Langfuse tracing (Chat Completions API), prompt sync, and multi-turn sessions |
+| `03_01_evals` | `python "03_01_evals/app.py"` | Alice agent server with Langfuse tracing (Responses API), plus dataset-driven evaluation experiments |
+
+Run from the project root (two terminals for server + demo):
+
+```bash
+# Terminal 1 — start the server
+.venv/Scripts/python "03_01_observability/app.py"
+
+# Terminal 2 — run the scripted demo conversation
+.venv/Scripts/python "03_01_observability/demo.py"
+```
+
+```bash
+# Terminal 1 — start the evals server
+.venv/Scripts/python "03_01_evals/app.py"
+
+# Terminal 2 — run the scripted demo conversation
+.venv/Scripts/python "03_01_evals/demo.py"
+```
+
+`03_01_observability` — A FastAPI HTTP server that runs the Alice agent using the **OpenAI Chat Completions API**. Every request is wrapped in a Langfuse trace; each LLM call is recorded as a generation; each tool call is recorded as a span. The Alice system prompt is hashed and synced to Langfuse on startup (only when content changes). In-memory sessions enable multi-turn conversations.
+
+API endpoints:
+```bash
+GET  /api/health     # service health + tracing status
+GET  /api/sessions   # list all active sessions
+POST /api/chat       # send a message, get agent response
+```
+
+`03_01_evals` — An identical server to `03_01_observability` but using the **OpenAI Responses API** (stateless input/output format). Additionally ships two dataset-driven evaluation experiments:
+
+```bash
+# Tool-use evaluation — checks correct tool selection and call count
+.venv/Scripts/python "03_01_evals/experiments/tool_use.py"
+
+# Response-correctness evaluation — checks exact numbers, ISO timestamps, topic relevance
+.venv/Scripts/python "03_01_evals/experiments/response_correctness.py"
+```
+
+Both experiment scripts prompt for interactive confirmation before spending tokens, sync dataset items to Langfuse, run the agent on each item with concurrency=2, score results, and print a formatted summary.

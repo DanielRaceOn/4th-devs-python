@@ -1,0 +1,58 @@
+[
+  {
+    "id": "time_only",
+    "message": "What time is it in UTC right now?",
+    "expect": {
+      "shouldUseTools": true,
+      "requiredTools": ["get_current_time"],
+      "forbiddenTools": ["sum_numbers"],
+      "minToolCalls": 1
+    }
+  },
+  {
+    "id": "sum_only",
+    "message": "Please sum these numbers: 2, 7, 11, 13.",
+    "expect": {
+      "shouldUseTools": true,
+      "requiredTools": ["sum_numbers"],
+      "forbiddenTools": ["get_current_time"],
+      "minToolCalls": 1
+    }
+  },
+  {
+    "id": "time_and_sum",
+    "message": "Give me current UTC time and also sum 3, 5, 8.",
+    "expect": {
+      "shouldUseTools": true,
+      "requiredTools": ["get_current_time", "sum_numbers"],
+      "minToolCalls": 2
+    }
+  },
+  {
+    "id": "no_tools_smalltalk",
+    "message": "Say hello in one short sentence.",
+    "expect": {
+      "shouldUseTools": false,
+      "requiredTools": [],
+      "maxToolCalls": 0
+    }
+  },
+  {
+    "id": "sum_negative_decimal",
+    "message": "Calculate the sum of -2.5, 4, and 1.5.",
+    "expect": {
+      "shouldUseTools": true,
+      "requiredTools": ["sum_numbers"],
+      "minToolCalls": 1
+    }
+  },
+  {
+    "id": "general_reasoning_no_tool",
+    "message": "In one sentence, explain what observability means for AI agents.",
+    "expect": {
+      "shouldUseTools": false,
+      "requiredTools": [],
+      "maxToolCalls": 0
+    }
+  }
+]

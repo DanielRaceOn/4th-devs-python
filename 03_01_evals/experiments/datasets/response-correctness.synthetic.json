@@ -1,0 +1,72 @@
+[
+  {
+    "id": "sum_basic",
+    "message": "Sum 10, 20, and 30.",
+    "expect": {
+      "type": "exact_number",
+      "value": 60,
+      "description": "Basic integer sum"
+    }
+  },
+  {
+    "id": "sum_negative",
+    "message": "What is the sum of -5, 15, and -3?",
+    "expect": {
+      "type": "exact_number",
+      "value": 7,
+      "description": "Sum with negative numbers"
+    }
+  },
+  {
+    "id": "sum_decimals",
+    "message": "Add up 1.1, 2.2, and 3.3 for me.",
+    "expect": {
+      "type": "exact_number",
+      "value": 6.6,
+      "description": "Sum with decimals"
+    }
+  },
+  {
+    "id": "sum_single",
+    "message": "Sum the number 42.",
+    "expect": {
+      "type": "exact_number",
+      "value": 42,
+      "description": "Degenerate single-element sum"
+    }
+  },
+  {
+    "id": "time_valid",
+    "message": "Tell me the current UTC time.",
+    "expect": {
+      "type": "contains_iso_timestamp",
+      "description": "Response must contain a valid ISO 8601 timestamp"
+    }
+  },
+  {
+    "id": "time_phrased",
+    "message": "What's the time right now in UTC?",
+    "expect": {
+      "type": "contains_iso_timestamp",
+      "description": "Response must contain a valid ISO 8601 timestamp (casual phrasing)"
+    }
+  },
+  {
+    "id": "no_tool_greeting",
+    "message": "Hi there!",
+    "expect": {
+      "type": "relevance",
+      "topic": "greeting",
+      "description": "Should respond with a greeting, not invoke tools"
+    }
+  },
+  {
+    "id": "no_tool_explain",
+    "message": "In one sentence, what is TypeScript?",
+    "expect": {
+      "type": "relevance",
+      "topic": "TypeScript programming language",
+      "description": "Should give a factual one-sentence answer without tools"
+    }
+  }
+]
